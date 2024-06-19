@@ -29,6 +29,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -53,7 +57,7 @@ dependencies {
     implementation (libs.converter.gson)
     implementation (libs.retrofit)
     implementation (libs.appcompat.vlatestversion)
-
+    implementation ("com.airbnb.android:lottie:3.4.0")
     implementation (libs.circleimageview)
     implementation (libs.circleindicator)
     implementation (libs.readmore.textview)
@@ -75,4 +79,15 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation (libs.org.eclipse.paho.client.mqttv3)
+    implementation (libs.org.eclipse.paho.android.service)
+    implementation ("com.github.shobhitpuri:custom-google-signin-button:2.0.0")
+    implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
+
+    // Required for one-shot operations (to use `ListenableFuture` from Guava Android)
+    implementation("com.google.guava:guava:31.0.1-android")
+
+    // Required for streaming operations (to use `Publisher` from Reactive Streams)
+    implementation("org.reactivestreams:reactive-streams:1.0.4")
+
 }

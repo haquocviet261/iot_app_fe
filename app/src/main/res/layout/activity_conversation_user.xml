@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="conversationViewModel"
+            type="com.project.smartfrigde.viewmodel.ChatViewModel" />
+    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageButton
+                android:id="@+id/back"
+                android:layout_margin="10dp"
+                android:onClick="@{() -> conversationViewModel.onclickBack()}"
+                android:layout_width="wrap_content"
+                android:src="@drawable/arrow"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/receiver_user_name"
+                android:textColor="@color/green_background"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:text="Chat BOT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_content"
+        android:layout_above="@+id/chat_nav"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+        <androidx.cardview.widget.CardView
+            android:layout_marginBottom="2dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/chat_nav"
+            app:cardElevation="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+            android:padding="5dp"
+            android:orientation="horizontal"
+            android:weightSum="20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:layout_weight="18"
+            app:cardElevation="12dp"
+            app:cardCornerRadius="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <EditText
+                android:textSize="20sp"
+                android:id="@+id/message_text"
+                android:background="?android:attr/selectableItemBackground"
+                android:padding="5dp"
+                android:hint="Message..."
+                android:paddingStart="18dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </androidx.cardview.widget.CardView>
+        <ImageButton
+            android:elevation="12dp"
+            android:src="@drawable/send"
+            android:id="@+id/sendButton"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+        </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</layout>

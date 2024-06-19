@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="detailDeviceViewModel"
+            type="com.project.smartfrigde.viewmodel.DetailDeviceViewModel" />
+    </data>
+    <RelativeLayout
+        android:orientation="vertical"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <androidx.cardview.widget.CardView
+        app:cardElevation="12dp"
+        android:id="@+id/group_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:weightSum="10"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="0dp"
+            android:src="@drawable/arrow"
+            android:onClick="@{() -> detailDeviceViewModel.onclickBack()}"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:layout_weight="7"
+            android:padding="5dp"
+            android:gravity="center"
+            android:textColor="@color/green_background"
+            android:textSize="30dp"
+            android:text="@{detailDeviceViewModel.device_name}"
+            android:textStyle="bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <com.airbnb.lottie.LottieAnimationView
+            android:onClick="@{() -> detailDeviceViewModel.addFood()}"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:layout_gravity="center_horizontal"
+            app:lottie_fileName="button_add_food.json" />
+    </LinearLayout>
+        </androidx.cardview.widget.CardView>
+     <LinearLayout
+         android:orientation="vertical"
+         android:layout_below="@id/group_nav"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+
+         <TextView
+             android:layout_width="match_parent"
+             android:layout_marginLeft="5dp"
+             android:text="Food Trays"
+             android:textSize="22sp"
+             android:textStyle="bold"
+             android:textColor="@color/green_background"
+             android:layout_height="wrap_content"/>
+         <LinearLayout
+             android:weightSum="8"
+             android:gravity="center"
+             android:orientation="horizontal"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+             <TextView
+                 android:layout_weight="3"
+                 android:textSize="18sp"
+                 android:text="Food Name"
+                 android:gravity="center"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"/>
+             <TextView
+                 android:gravity="center"
+                 android:text="Calories (Kg/unit)"
+                 android:layout_weight="2"
+                 android:textSize="18sp"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"/>
+             <TextView
+                 android:gravity="center"
+                 android:textSize="18sp"
+                 android:layout_weight="3"
+                 android:text="Date Expired"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"/>
+
+         </LinearLayout>
+         <androidx.recyclerview.widget.RecyclerView
+             android:layout_width="match_parent"
+             android:id="@+id/list_food_items"
+             android:layout_height="wrap_content"/>
+     </LinearLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:onClick="@{() -> detailDeviceViewModel.onClickAddTray()}"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/green_background"
+            android:src="@drawable/baseline_add_24"
+            android:contentDescription="@string/add"
+            android:layout_margin="20dp" />
+    </RelativeLayout>
+</layout>

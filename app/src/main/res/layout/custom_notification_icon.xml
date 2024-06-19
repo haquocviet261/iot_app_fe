@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="homeViewModel"
+            type="com.project.smartfrigde.viewmodel.HomeViewmodel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:padding="5dp"
+        android:onClick="@{() -> homeViewModel.viewNotification()}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ImageButton
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="@{() -> homeViewModel.viewNotification()}"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/notification_icon"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_width="40dp"
+        android:src="@drawable/notifications"
+        android:layout_height="40dp"/>
+    <androidx.cardview.widget.CardView
+        android:layout_marginRight="5dp"
+        android:onClick="@{() -> homeViewModel.viewNotification()}"
+        android:layout_marginTop="5dp"
+        android:id="@+id/notification_number"
+        app:layout_constraintEnd_toEndOf="@id/notification_icon"
+        app:layout_constraintTop_toTopOf="@+id/notification_icon"
+        app:cardCornerRadius="50dp"
+        app:cardBackgroundColor="@color/red"
+        android:layout_width="17dp"
+        android:layout_height="17dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:id="@+id/is_notification"
+        android:onClick="@{() -> homeViewModel.viewNotification()}"
+        android:layout_height="match_parent">
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
