@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.project.smartfrigde.data.dto.request.BmiRequest;
 import com.project.smartfrigde.data.dto.response.ResponseObject;
 import com.project.smartfrigde.model.Bmi;
 import com.project.smartfrigde.utils.TokenManager;
@@ -46,8 +47,8 @@ public interface BmiAPIService {
         }
     };
     OkHttpClient.Builder BUILDER = new OkHttpClient.Builder()
-            .readTimeout(120, TimeUnit.SECONDS)
-            .connectTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(300, TimeUnit.SECONDS)
+            .connectTimeout(300, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
             .addInterceptor(INTERCEPTOR)
             .addInterceptor(HTTP_LOGGING_INTERCEPTOR);
@@ -59,7 +60,7 @@ public interface BmiAPIService {
             .build()
             .create(BmiAPIService.class);
     @POST("add")
-    Observable<ResponseObject> saveBmi(@Body Bmi bmi);
+    Observable<ResponseObject> saveBmi(@Body BmiRequest bmi);
     @GET("get")
     Observable<ResponseObject> getBmiByUser_ID(@Query("user_id") Long user_id);
 }

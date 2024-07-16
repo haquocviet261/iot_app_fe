@@ -44,8 +44,8 @@ public class FoodItemClient {
         }
     };
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
-            .readTimeout(120, TimeUnit.SECONDS)
-            .connectTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(300, TimeUnit.SECONDS)
+            .connectTimeout(300, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
             .addInterceptor(INTERCEPTOR)
             .addInterceptor(HTTP_LOGGING_INTERCEPTOR)

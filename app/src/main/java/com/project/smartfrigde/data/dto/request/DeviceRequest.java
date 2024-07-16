@@ -1,6 +1,8 @@
 package com.project.smartfrigde.data.dto.request;
 
-public class DeviceRequest {
+import java.io.Serializable;
+
+public class DeviceRequest implements Serializable {
     private Long device_id;
     private String device_type;
 

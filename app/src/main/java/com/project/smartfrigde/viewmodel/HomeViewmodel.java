@@ -1,5 +1,6 @@
 package com.project.smartfrigde.viewmodel;
 
+import android.content.SharedPreferences;
 import android.view.View;
 
 import androidx.databinding.ObservableArrayList;
@@ -10,10 +11,14 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.project.smartfrigde.data.dto.request.DeviceRequest;
+import com.project.smartfrigde.data.dto.response.FoodItemResponse;
 import com.project.smartfrigde.data.dto.response.ResponseObject;
+import com.project.smartfrigde.data.remote.api.DeviceAPIService;
 import com.project.smartfrigde.data.remote.api.FoodAPIService;
 import com.project.smartfrigde.data.remote.api.retrofit.DeviceItemClient;
 import com.project.smartfrigde.data.remote.api.retrofit.FoodClient;
+import com.project.smartfrigde.data.remote.api.retrofit.FoodItemClient;
 import com.project.smartfrigde.model.DeviceItem;
 import com.project.smartfrigde.model.Food;
 import com.project.smartfrigde.utils.TokenManager;
@@ -37,6 +42,7 @@ import ua.naiksoftware.stomp.dto.StompMessage;
 
 public class HomeViewmodel extends ViewModel {
     private static final Gson gson = new Gson();
+
     private ObservableField<Integer> is_device_exist = new ObservableField<>(View.GONE);
     private ObservableField<Boolean> add_device = new ObservableField<>(false);
     private ObservableField<Boolean> chat_now = new ObservableField<>(false);
@@ -46,9 +52,38 @@ public class HomeViewmodel extends ViewModel {
     private ObservableField<Boolean> isLoaddedData = new ObservableField<>(false);
     private ObservableField<Boolean> isDetailDevice = new ObservableField<>(false);
     private ObservableArrayList<Food> foods = new ObservableArrayList<Food>();
+    public ObservableArrayList<DeviceRequest> list_device = new ObservableArrayList<>();
+    private ObservableField<Boolean> is_loadded_data = new ObservableField<>(Boolean.FALSE);
+
+    private ObservableArrayList<FoodItemResponse> list_food_item = new ObservableArrayList<>();
+    private ObservableField<Boolean> isLoaddedFoodItem = new ObservableField<>(false);
+
+    public ObservableField<Boolean> getIs_loadded_data() {
+        return is_loadded_data;
+    }
+
+    public void setIs_loadded_data(ObservableField<Boolean> is_loadded_data) {
+        this.is_loadded_data = is_loadded_data;
+    }
 
     public ObservableField<Boolean> getIsDetailDevice() {
         return isDetailDevice;
+    }
+
+    public ObservableArrayList<FoodItemResponse> getList_food_item() {
+        return list_food_item;
+    }
+
+    public void setList_food_item(ObservableArrayList<FoodItemResponse> list_food_item) {
+        this.list_food_item = list_food_item;
+    }
+
+    public ObservableArrayList<DeviceRequest> getList_device() {
+        return list_device;
+    }
+
+    public void setList_device(ObservableArrayList<DeviceRequest> list_device) {
+        this.list_device = list_device;
     }
 
     public void setIsDetailDevice(ObservableField<Boolean> isDetailDevice) {
@@ -71,6 +106,7 @@ public class HomeViewmodel extends ViewModel {
         return is_device_exist;
     }
     public void addDvice(){
+        add_device.set(false);
         add_device.set(true);
     }
     public void chatNow(){
@@ -121,14 +157,14 @@ public class HomeViewmodel extends ViewModel {
     public void setSelectedPage(int page) {
         selectedPage.setValue(page);
     }
-    public void getAllFood(){
+    public void getAllFood(SharedPreferences.Editor editor){
         FoodClient.getFoodApiService().getAllFood()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseObject>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-
+                        disposable.add(d);
                     }
 
                     @Override
@@ -137,6 +173,9 @@ public class HomeViewmodel extends ViewModel {
                                 new TypeToken<List<Food>>(){}.getType()
                         );
                         foods.addAll(list);
+                        String json = gson.toJson(list);
+                        editor.putString(Validation.KEY_FOOD_LIST, json);
+                        editor.apply();
                     }
 
                     @Override
@@ -150,7 +189,78 @@ public class HomeViewmodel extends ViewModel {
                     }
                 });
     }
+
+    public ObservableField<Boolean> getIsLoaddedFoodItem() {
+        return isLoaddedFoodItem;
+    }
+
+    public void setIsLoaddedFoodItem(ObservableField<Boolean> isLoaddedFoodItem) {
+        this.isLoaddedFoodItem = isLoaddedFoodItem;
+    }
+
+    public void getFoodItemByDeviceItemID(Long device_item_id){
+        FoodItemClient.getFoodItemAPIService().getFoodItemByDeviceItemID(device_item_id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        disposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull ResponseObject responseObject) {
+                        List<FoodItemResponse> list = gson.fromJson(new Gson().toJson(responseObject.getData()),
+                                new TypeToken<List<FoodItemResponse>>(){}.getType()
+                        );
+                        list_food_item.addAll(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        isLoaddedFoodItem.set(true);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        isLoaddedFoodItem.set(false);
+                    }
+                });
+    }
+    public void callAPI(SharedPreferences.Editor editor){
+        DeviceAPIService.DEVICE_API_SERVICE.getAllDevice().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        disposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull ResponseObject responseObject) {
+                        List<DeviceRequest> list = gson.fromJson(new Gson().toJson(responseObject.getData()),
+                                new TypeToken<List<DeviceRequest>>(){}.getType()
+                        );
+                        list_device.addAll(list);
+                        String json = gson.toJson(list);
+                        editor.putString(Validation.KEY_DEVICE, json);
+                        editor.apply();
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        is_loadded_data.set(false);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        is_loadded_data.set(true);
+                    }
+                });
+    }
     public void isDetailDevice(){
+        isDetailDevice.set(false);
         isDetailDevice.set(true);
     }
     @Override

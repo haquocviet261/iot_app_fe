@@ -2,6 +2,7 @@ package com.project.smartfrigde.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
@@ -25,6 +27,9 @@ import com.project.smartfrigde.databinding.ItemDeviceBinding;
 import com.project.smartfrigde.model.BluetoothDevice;
 import com.project.smartfrigde.model.Device;
 import com.project.smartfrigde.model.Wifi;
+import com.project.smartfrigde.utils.ProgressDialog;
+import com.project.smartfrigde.view.DetailDeviceActivity;
+import com.project.smartfrigde.viewmodel.HomeViewmodel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +38,12 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     private List<BluetoothDevice> list = new ArrayList<>();
     private Context context;
     private BluetoothService bluetoothService;
-    public DeviceAdapter(List<BluetoothDevice> list,Context context,BluetoothService bluetoothService) {
+    private HomeViewmodel homeViewmodel;
+    public DeviceAdapter(List<BluetoothDevice> list,Context context,BluetoothService bluetoothService,HomeViewmodel homeViewmodel) {
         this.list = list;
         this.context = context;
         this.bluetoothService = bluetoothService;
+        this.homeViewmodel = homeViewmodel;
     }
 
     public BluetoothService getBluetoothService() {
@@ -55,6 +62,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     @Override
     public DeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemDeviceBinding itemDeviceBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_device,parent,false);
+        itemDeviceBinding.setHomeViewModel(homeViewmodel);
         return new DeviceViewHolder(itemDeviceBinding);
     }
 
@@ -62,6 +70,20 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     public void onBindViewHolder(@NonNull DeviceViewHolder holder, int position) {
         BluetoothDevice device = list.get(position);
         holder.itemDeviceBinding.setDevice(device);
+        holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                checkAndNavigate(holder.itemDeviceBinding.getHomeViewModel(), context,device.getName());
+            }
+        });
+
+        holder.itemDeviceBinding.getHomeViewModel().getIsLoaddedData().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                checkAndNavigate(holder.itemDeviceBinding.getHomeViewModel(), context,device.getName());
+            }
+        });
+        holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().set(false);
         holder.itemDeviceBinding.detailDevice.setOnClickListener(view -> {
             openWifiSettingDialog(Gravity.CENTER);
         });
@@ -119,6 +141,15 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         public DeviceViewHolder(@NonNull ItemDeviceBinding itemView) {
             super(itemView.getRoot());
             this.itemDeviceBinding = itemView;
+        }
+    }
+    private void checkAndNavigate(HomeViewmodel viewModel, Context context,String device_name) {
+        if (Boolean.TRUE.equals(viewModel.getIsDetailDevice().get()) &&
+                Boolean.TRUE.equals(viewModel.getIsLoaddedData().get())) {
+            Intent intent = new Intent(context, DetailDeviceActivity.class);
+            intent.putExtra("list_food", viewModel.getFoods());
+            intent.putExtra("device_name", device_name);
+            context.startActivity(intent);
         }
     }
 }

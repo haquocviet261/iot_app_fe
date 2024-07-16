@@ -45,8 +45,8 @@ public class GeminiClient {
                     };
 
                     OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                            .readTimeout(120, TimeUnit.SECONDS)
-                            .connectTimeout(120, TimeUnit.SECONDS)
+                            .readTimeout(300, TimeUnit.SECONDS)
+                            .connectTimeout(300, TimeUnit.SECONDS)
                             .retryOnConnectionFailure(true)
                             .addInterceptor(apiKeyInterceptor)
                             .addInterceptor(loggingInterceptor)

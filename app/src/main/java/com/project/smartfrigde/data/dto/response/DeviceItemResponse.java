@@ -1,23 +1,16 @@
-package com.project.smartfrigde.model;
+package com.project.smartfrigde.data.dto.response;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-
-import java.io.Serializable;
-
-public class DeviceItem implements Serializable {
+public class DeviceItemResponse {
     private Long device_item_id;
     private String device_name;
     private String mac_address;
     private Long device_id;
     private Long user_id;
 
-    public DeviceItem() {
+    public DeviceItemResponse() {
     }
 
-    public DeviceItem(Long device_item_id, String device_name, String mac_address, Long device_id, Long user_id) {
+    public DeviceItemResponse(Long device_item_id, String device_name, String mac_address, Long device_id, Long user_id) {
         this.device_item_id = device_item_id;
         this.device_name = device_name;
         this.mac_address = mac_address;
@@ -64,7 +57,4 @@ public class DeviceItem implements Serializable {
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
-
-    // Parcelable implementation
-
 }

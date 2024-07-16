@@ -1,11 +1,28 @@
 package com.project.smartfrigde.model;
 
+import java.util.List;
+
 public class FoodItem {
     private String food_item_name;
     private String unit;
     private String expired_date;
-
+    private List<Food> list;
     public FoodItem() {
+    }
+
+    public FoodItem(String food_item_name, String unit, String expired_date, List<Food> list) {
+        this.food_item_name = food_item_name;
+        this.unit = unit;
+        this.expired_date = expired_date;
+        this.list = list;
+    }
+
+    public List<Food> getList() {
+        return list;
+    }
+
+    public void setList(List<Food> list) {
+        this.list = list;
     }
 
     public FoodItem(String food_item_name, String unit, String expired_date) {

@@ -83,6 +83,7 @@
                                android:layout_gravity="center_horizontal"
                                app:lottie_fileName="weight.json" />
                            <EditText
+                               android:gravity="center"
                                android:id="@+id/at_weight"
                                android:hint="Weight..."
                                android:background="?attr/selectableItemBackgroundBorderless"
@@ -108,6 +109,7 @@
                                android:src="@drawable/age"
                                android:layout_height="70dp"/>
                            <EditText
+                               android:gravity="center"
                                android:hint="Age..."
                                android:id="@+id/at_age"
                                android:background="?attr/selectableItemBackgroundBorderless"
@@ -133,6 +135,7 @@
                               android:background="?attr/selectableItemBackgroundBorderless"
                               android:layout_height="70dp"/>
                            <EditText
+                               android:gravity="center"
                                android:hint="Height..."
                                android:id="@+id/at_height"
                                android:background="?attr/selectableItemBackgroundBorderless"
@@ -158,6 +161,7 @@
                                 android:src="@drawable/gender"
                                 android:layout_height="70dp"/>
                            <AutoCompleteTextView
+                               android:gravity="center"
                                android:id="@+id/gender"
                                android:hint="M/FM"
                                android:background="?attr/selectableItemBackgroundBorderless"
@@ -172,7 +176,7 @@
        </LinearLayout>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floating_action_button"
-            android:onClick="@{() -> mealViewModel.onlickAdd()}"
+            android:onClick="@{() -> mealViewModel.caculateCalories()}"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
@@ -182,6 +186,7 @@
             android:contentDescription="@string/add"
             android:layout_margin="20dp" />
         <androidx.cardview.widget.CardView
+            android:id="@+id/group_calories"
             android:layout_marginTop="15dp"
            android:visibility="@{mealViewModel.is_show_calories ? View.VISIBLE : View.GONE}"
             app:cardCornerRadius="15dp"
@@ -211,5 +216,6 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
     </RelativeLayout>
 </layout>

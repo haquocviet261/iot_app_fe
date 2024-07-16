@@ -2,7 +2,9 @@ package com.project.smartfrigde.view;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -26,13 +28,19 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
+import com.google.common.reflect.TypeToken;
 import com.project.smartfrigde.R;
 import com.project.smartfrigde.databinding.ActivityLoginBinding;
+import com.project.smartfrigde.model.Food;
 import com.project.smartfrigde.utils.ProgressDialog;
 import com.project.smartfrigde.utils.SecurePreferencesManager;
 import com.project.smartfrigde.utils.UserSecurePreferencesManager;
+import com.project.smartfrigde.utils.Validation;
+import com.project.smartfrigde.viewmodel.HomeViewmodel;
 import com.project.smartfrigde.viewmodel.LoginViewModel;
 
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -45,11 +53,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SecurePreferencesManager.init(this);
+        SharedPreferences sharedPreferences = getSharedPreferences(Validation.PREF_NAME, Context.MODE_PRIVATE);
         progressDialog = new ProgressDialog(LoginActivity.this,R.layout.progressdialog);
-        UserSecurePreferencesManager.init(this);
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        loginViewModel = new LoginViewModel();
+        SecurePreferencesManager.init(this);
+        UserSecurePreferencesManager.init(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        loginViewModel = new LoginViewModel(sharedPreferences);
         loginBinding.setLoginViewModel(loginViewModel);
         groupImages = findViewById(R.id.group_images);
         groupText = findViewById(R.id.group_text);
@@ -59,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if ( Boolean.TRUE.equals(loginViewModel.getClick_oauth2().get())){
                     progressDialog.dismiss();
-                    initiateGoogleSignIn();
+                    initiateGoogleSignIn(editor);
                 }else {
                     progressDialog.show();
                 }
@@ -93,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
         animatorSet.setDuration(1000); // duration in milliseconds
         animatorSet.start();
     }
-    private void initiateGoogleSignIn(){
+    private void initiateGoogleSignIn(SharedPreferences.Editor editor){
         Executor executor = Executors.newSingleThreadExecutor();
         CredentialManager credentialManager = CredentialManager.create(LoginActivity.this);
         GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
@@ -112,17 +122,19 @@ public class LoginActivity extends AppCompatActivity {
                 new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
                     @Override
                     public void onResult(GetCredentialResponse result) {
-                        if (loginViewModel.handleSignIn(result)){
+                        if (loginViewModel.handleSignIn(editor,result)){
                             loginViewModel.is_loadded_data.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                                 @Override
                                 public void onPropertyChanged(Observable sender, int propertyId) {
-                                    progressDialog.dismiss();
-                                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                    intent.putExtra("list_device_item",loginViewModel.getList_device_item());
-                                    startActivity(intent);
+                                    checkAndNavigate(loginViewModel,LoginActivity.this);
                                 }
                             });
-
+                            loginViewModel.getUserLiveData().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                                @Override
+                                public void onPropertyChanged(Observable sender, int propertyId) {
+                                    checkAndNavigate(loginViewModel,LoginActivity.this);
+                                }
+                            });
                         }else {
                             Log.e("LoginActivity", "Login failed: " + result.toString());
                         }
@@ -134,5 +146,13 @@ public class LoginActivity extends AppCompatActivity {
                         loginViewModel.setMessage(e);
                     }
                 });
+    }
+    private void checkAndNavigate(LoginViewModel viewModel, Context context) {
+        if (Boolean.TRUE.equals(viewModel.is_loadded_data.get()) &&
+                viewModel.getUserLiveData().get() != null) {
+                progressDialog.dismiss();
+                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                startActivity(intent);
+        }
     }
 }

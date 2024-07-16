@@ -12,6 +12,9 @@ public class Food implements Parcelable {
     private String unit;
     private Long food_category_id;
 
+    public Food() {
+    }
+
     public Food(Long food_id, String food_name, Integer date_expired, Integer calories_per_unit, String unit, Long food_category_id) {
         this.food_id = food_id;
         this.food_name = food_name;

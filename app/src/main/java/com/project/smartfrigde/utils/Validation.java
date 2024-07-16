@@ -17,8 +17,16 @@ public class Validation {
             return null;
         }
     }
-    public static final String STOMP_WEB_SOCKET_URL = "ws:// 192.168.11.3:9999/ws";
-    public static final String WEB_SOCKET_URL = "ws:// 192.168.11.3:9999/handle";
+    public static final String PREF_NAME = "my_shared_preferences";
+    public static final String KEY_FOOD_LIST = "food_list";
+    public static final String KEY_DEVICE_ITEMS = "device_items";
+    public static final String KEY_FOOD_ITEMS = "food_items";
+    public static final String KEY_FOOD_CONSUMED = "food_consumed";
+
+    public static final String KEY_BMI = "bmi_user";
+    public static final String KEY_DEVICE = "device_list";
+    public static final String STOMP_WEB_SOCKET_URL = "ws://10.0.0.2:9999/ws";
+    public static final String WEB_SOCKET_URL = "ws://192.168.11.3:9999/handle";
     public static final String WEB_SERVICE_URL = "http://192.168.11.3:9999";
     public static final int TYPE_USER = 0;
     public static final int TYPE_BOT = 1;

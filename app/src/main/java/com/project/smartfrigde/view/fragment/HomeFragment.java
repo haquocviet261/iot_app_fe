@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -18,9 +20,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.project.smartfrigde.R;
 import com.project.smartfrigde.adapter.DeviceAdapter;
 import com.project.smartfrigde.bluetooth.BluetoothService;
+import com.project.smartfrigde.data.dto.request.DeviceRequest;
 import com.project.smartfrigde.databinding.FragmentHomeBinding;
 import com.project.smartfrigde.model.BluetoothDevice;
 import com.project.smartfrigde.model.DeviceItem;
@@ -29,12 +34,14 @@ import com.project.smartfrigde.model.User;
 import com.project.smartfrigde.service.WebSocketService;
 import com.project.smartfrigde.utils.ProgressDialog;
 import com.project.smartfrigde.utils.UserSecurePreferencesManager;
+import com.project.smartfrigde.utils.Validation;
 import com.project.smartfrigde.view.AddDeviceActivity;
 import com.project.smartfrigde.view.ChatActivity;
 import com.project.smartfrigde.view.DetailDeviceActivity;
 import com.project.smartfrigde.view.NotificationActivity;
 import com.project.smartfrigde.viewmodel.HomeViewmodel;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -45,52 +52,53 @@ import ua.naiksoftware.stomp.dto.StompMessage;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding fragmentHomeBinding;
+    private  final Gson gson = new Gson();
     private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private HomeViewmodel homeViewmodel;
     private DeviceAdapter deviceAdapter;
     private List<BluetoothDevice> list = new ArrayList<>();
     private BluetoothDevice bluetoothDevice;
+
+
     User user = UserSecurePreferencesManager.getUser();
+
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        Intent serviceIntent = new Intent(getContext(), WebSocketService.class);
-//        ContextCompat.startForegroundService(getContext(), serviceIntent);
+        Intent intent = new Intent(getContext(), WebSocketService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getContext().startForegroundService(intent);
+        } else {
+            getContext().startService(intent);
+        }
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Validation.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         progressDialog = new ProgressDialog(getContext(),R.layout.progressdialog);
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),3);
-        deviceAdapter = new DeviceAdapter(list,getContext(),null);
         homeViewmodel = new HomeViewmodel();
+        fragmentHomeBinding.setHomeViewModel(homeViewmodel);
+        deviceAdapter = new DeviceAdapter(list,getContext(),null,homeViewmodel);
         recyclerView = fragmentHomeBinding.listDevice;
         recyclerView.setAdapter(deviceAdapter);
-        fragmentHomeBinding.setHomeViewModel(homeViewmodel);
+        String jsonFood = sharedPreferences.getString(Validation.KEY_FOOD_LIST, null);
+        String jsonDevices = sharedPreferences.getString(Validation.KEY_DEVICE, null);
+        String jsonDeviceItems = sharedPreferences.getString(Validation.KEY_DEVICE_ITEMS, null);
+        if (jsonFood != null) {
+            Type type = new TypeToken<List<Food>>() {}.getType();
+            homeViewmodel.getFoods().addAll(gson.fromJson(jsonFood, type));
+        } else {
+            homeViewmodel.getAllFood(editor);
+        }
+        if (jsonDevices != null){
+            Type type = new TypeToken<List<DeviceRequest>>() {}.getType();
+            homeViewmodel.getFoods().addAll(gson.fromJson(jsonDevices, type));
+        }else {
+            homeViewmodel.callAPI(editor);
+        }
 
-        homeViewmodel.getAllFood();
-        homeViewmodel.getIsDetailDevice().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if(Boolean.TRUE.equals(homeViewmodel.getIsLoaddedData().get())){
-                    progressDialog.show();
-                    homeViewmodel.getIsLoaddedData().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-                        @Override
-                        public void onPropertyChanged(Observable sender, int propertyId) {
-                            if(Boolean.TRUE.equals(homeViewmodel.getIsLoaddedData().get())){
-                                progressDialog.dismiss();
-                                Intent intent = new Intent(getContext(),DetailDeviceActivity.class);
-                                ArrayList<Food> list_food = homeViewmodel.getFoods();
-                                intent.putParcelableArrayListExtra("list_food",list_food);
-
-                                startActivity(intent);
-                            }
-                        }
-                    });
-                }else {
-                    progressDialog.dismiss();
-                }
-            }
-        });
         homeViewmodel.getIsDetailDevice().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
@@ -99,19 +107,20 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        Intent intent = getActivity().getIntent();
-        if (intent.hasExtra("list_device_item")){
+        homeViewmodel.getIs_device_exist().set(View.GONE);
 
-            ArrayList<DeviceItem> deviceItemList = intent.getParcelableArrayListExtra("deviceItemList");
-            for (int i = 0; i < list.size(); i++) {
-                if (deviceItemList != null){
-                    list.add(new BluetoothDevice(deviceItemList.get(i).getDevice_item_id(),deviceItemList.get(i).getDevice_name(),deviceItemList.get(i).getMac_address()));
-                }
-            }
+        if (jsonDeviceItems != null){
+            Type type = new TypeToken<List<DeviceItem>>() {}.getType();
+            List<DeviceItem> deviceItemList = gson.fromJson(jsonDeviceItems, type);
+            list.add(new BluetoothDevice(deviceItemList.get(0).getDevice_item_id(),deviceItemList.get(0).getDevice_name(),deviceItemList.get(0).getMac_address()) );
             deviceAdapter.setData(list);
             homeViewmodel.getIs_device_exist().set(View.VISIBLE);
+
+        }else {
+            homeViewmodel.getIs_device_exist().set(View.GONE);
         }
-        if ( intent.hasExtra("device")){
+        Intent add_device_intent = getActivity().getIntent();
+        if ( add_device_intent.hasExtra("device")){
             bluetoothDevice =  intent.getParcelableExtra("device");
             homeViewmodel.getIs_device_exist().set(View.VISIBLE);
             BluetoothService bluetoothService = new BluetoothService(getContext(),bluetoothDevice.getBluetoothDevice());
@@ -119,21 +128,23 @@ public class HomeFragment extends Fragment {
             list.add(bluetoothDevice);
             deviceAdapter.setData(list);
             deviceAdapter.setBluetoothService(bluetoothService);
-        }else {
-            homeViewmodel.getIs_device_exist().set(View.GONE);
         }
 
         recyclerView.setLayoutManager(gridLayoutManager);
-        User user = UserSecurePreferencesManager.getUser();
+
         fragmentHomeBinding.userName.setText(user.getFirst_name() + " "+ user.getLast_name());
+
         homeViewmodel.getAdd_device().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                if (Boolean.TRUE.equals(homeViewmodel.getAdd_device().get())){
-                    startActivity(new Intent(getContext(), AddDeviceActivity.class));
+                if (Boolean.TRUE.equals(homeViewmodel.getAdd_device().get())) {
+                    Intent intent = new Intent(getContext(), AddDeviceActivity.class);
+                    startActivity(intent);
                 }
             }
         });
+        homeViewmodel.getIs_loadded_data().set(false);
+        homeViewmodel.getIs_loadded_data().set(false);
         homeViewmodel.getChat_now().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {

@@ -13,12 +13,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.smartfrigde.R;
 import com.project.smartfrigde.bluetooth.BluetoothService;
 import com.project.smartfrigde.databinding.ItemDeviceScanBinding;
 import com.project.smartfrigde.model.BluetoothDevice;
+import com.project.smartfrigde.utils.ProgressDialog;
 import com.project.smartfrigde.view.DashboardActivity;
 
 import java.util.ArrayList;
@@ -61,14 +63,14 @@ public class DeviceScanAdapter extends RecyclerView.Adapter<DeviceScanAdapter.De
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, DashboardActivity.class);
-                intent.putExtra("device", bluetoothDevice);
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                bluetoothAdapter.cancelDiscovery();
-                bluetoothDevice.getAddDeviceViewModel().addDeviceItem(bluetoothDevice.getName(), bluetoothDevice.getMac());
-                context.startActivity(intent);
+                            Intent intent = new Intent(context, DashboardActivity.class);
+                            intent.putExtra("device", bluetoothDevice);
+                            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                                return;
+                            }
+                            bluetoothDevice.getAddDeviceViewModel().addDeviceItem(bluetoothDevice.getAddDeviceViewModel().getDevice_id(),bluetoothDevice.getName(), bluetoothDevice.getMac());
+                            bluetoothAdapter.cancelDiscovery();
+                            context.startActivity(intent);
             }
         });
     }

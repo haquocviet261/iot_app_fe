@@ -1,6 +1,7 @@
 package com.project.smartfrigde.viewmodel;
 
 
+import android.content.SharedPreferences;
 import android.view.View;
 
 import androidx.credentials.Credential;
@@ -19,11 +20,13 @@ import com.project.smartfrigde.data.dto.response.ResponseObject;
 import com.project.smartfrigde.data.dto.response.TokenResponse;
 import com.project.smartfrigde.data.remote.api.retrofit.DeviceItemClient;
 import com.project.smartfrigde.model.DeviceItem;
+import com.project.smartfrigde.model.Food;
 import com.project.smartfrigde.model.User;
 import com.project.smartfrigde.utils.TokenManager;
 import com.project.smartfrigde.utils.UserSecurePreferencesManager;
 import com.project.smartfrigde.utils.Validation;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -55,8 +58,9 @@ public class LoginViewModel extends ViewModel {
     public void setErrorMessageLiveData(ObservableField<String> errorMessageLiveData) {
         this.errorMessageLiveData = errorMessageLiveData;
     }
-
-    public LoginViewModel() {
+    private  SharedPreferences sharedPreferences;
+    public LoginViewModel(SharedPreferences sharedPreferences) {
+        this.sharedPreferences= sharedPreferences;
     }
     public ObservableField<Integer> getMessageVisibility() {
         return messageVisibility;
@@ -130,7 +134,7 @@ public class LoginViewModel extends ViewModel {
         this.list_device_item = list_device_item;
     }
 
-    private void sendTokenOauth2(String token){
+    private void sendTokenOauth2(SharedPreferences.Editor editor,String token){
         tokenManager.saveOauth2AccessToken(token);
         UserAPIService.USER_API_SERVICE.sendToken()
                 .subscribeOn(Schedulers.io())
@@ -142,12 +146,15 @@ public class LoginViewModel extends ViewModel {
                     }
                     @Override
                     public void onNext(@NonNull ResponseObject responseObject) {
+
                         Gson gson = new Gson();
                         String json = gson.toJson(responseObject.getData());
                          tokenResponse = gson.fromJson(json, TokenResponse.class);
                          tokenLiveData.set(tokenResponse);
-                        tokenManager.saveToken(tokenResponse.getAccess_token(),tokenResponse.getRefresh_token());
-                        fetchUser();
+                         tokenManager.saveToken(tokenResponse.getAccess_token(),tokenResponse.getRefresh_token());
+                        if (checkUserExist()){
+                            fetchUser(editor);
+                        }
                     }
                     @Override
                     public void onError(@NonNull Throwable e) {
@@ -159,7 +166,7 @@ public class LoginViewModel extends ViewModel {
                 });
     }
 
-    public void fetchUser(){
+    public void fetchUser(SharedPreferences.Editor editor){
         UserAPIService.USER_API_SERVICE.showProfile(Validation.extractUserID(tokenManager.getAccessToken()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -176,7 +183,10 @@ public class LoginViewModel extends ViewModel {
                         User user = gson.fromJson(userJson,User.class);
                         userLiveData.set (user);
                         UserSecurePreferencesManager.saveUser(user);
-                        getListDeviceItemByUserID(user.getUser_id());
+                        String jsonDeviceItems = sharedPreferences.getString(Validation.KEY_DEVICE_ITEMS, null);
+                        if (jsonDeviceItems != null){
+                            getListDeviceItemByUserID(editor,UserSecurePreferencesManager.getUser().getUser_id());
+                        }
                     }
                     @Override
                     public void onError(@NonNull Throwable e) {
@@ -193,7 +203,7 @@ public class LoginViewModel extends ViewModel {
         super.onCleared();
         compositeDisposable.clear();
     }
-    public void getListDeviceItemByUserID(Long user_id){
+    public void getListDeviceItemByUserID(SharedPreferences.Editor editor,Long user_id){
         DeviceItemClient.getDeviceItemApiService().findDeviceItem(user_id).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseObject>() {
@@ -208,6 +218,10 @@ public class LoginViewModel extends ViewModel {
                                 new TypeToken<List<DeviceItem>>(){}.getType()
                         );
                         list_device_item.addAll(list);
+                        is_loadded_data.set(true);
+                        String json = gson.toJson(list);
+                        editor.putString(Validation.KEY_DEVICE_ITEMS, json);
+                        editor.apply();
                     }
 
                     @Override
@@ -224,14 +238,21 @@ public class LoginViewModel extends ViewModel {
     public void setMessage(GetCredentialException e) {
         errorMessageLiveData.set(e.getMessage());
     }
-    public boolean handleSignIn(GetCredentialResponse result) {
+    public boolean handleSignIn(SharedPreferences.Editor editor,GetCredentialResponse result) {
         Credential credential = result.getCredential();
             if (GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL.equals(credential.getType())) {
                 GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(((CustomCredential) credential).getData());
                 String token = googleIdTokenCredential.getIdToken();
-                sendTokenOauth2(token);
+                sendTokenOauth2(editor,token);
                 return true;
             }
             return false;
     }
+    public boolean checkUserExist(){
+        if (UserSecurePreferencesManager.getUser() != null){
+            return true;
+        }
+        return false;
+    }
+
 }

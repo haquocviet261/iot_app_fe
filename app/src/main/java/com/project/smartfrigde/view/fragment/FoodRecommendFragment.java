@@ -61,6 +61,9 @@ public class FoodRecommendFragment extends Fragment {
         recyclerView.setAdapter(foodRecommendAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
         setupMessageSending();
+        fragmentFoodRecommendBinding.refresh.setOnClickListener(view -> {
+            setupMessageSending();
+        });
         foodRecommendViewModel.getIs_loaded_data().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
@@ -88,6 +91,7 @@ public class FoodRecommendFragment extends Fragment {
                 });
             }
         });
+        foodRecommendViewModel.getIs_loaded_data().set(false);
         return fragmentFoodRecommendBinding.getRoot();
     }
     private void setupMessageSending() {

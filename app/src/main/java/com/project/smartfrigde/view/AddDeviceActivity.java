@@ -54,12 +54,17 @@ public class AddDeviceActivity extends AppCompatActivity {
     DeviceScanAdapter deviceScanAdapter;
     private ActivityResultLauncher<Intent> enableBluetoothLauncher;
     User user = UserSecurePreferencesManager.getUser();
+    private Long device_id;
 
     List<com.project.smartfrigde.model.BluetoothDevice> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addDeviceViewModel = new AddDeviceViewModel(user.getUser_id());
+        Intent intent = getIntent();
+        if ( intent.hasExtra("device_id")){
+            device_id = intent.getLongExtra("device_id",-1L);
+        }
+        addDeviceViewModel = new AddDeviceViewModel(device_id,user.getUser_id());
         activityAddDeviceBinding = DataBindingUtil.setContentView(this,R.layout.activity_add_device);
         activityAddDeviceBinding.setAddDeviceViewModel(addDeviceViewModel);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -106,7 +111,6 @@ public class AddDeviceActivity extends AppCompatActivity {
                 }
             }
         });
-        addDeviceViewModel.callAPI();
 
         registerReceiver(receiver, filter);
         deviceScanAdapter.setBluetoothAdapter(bluetoothAdapter);

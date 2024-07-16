@@ -55,7 +55,7 @@ public interface DeviceAPIService {
             .client(BUILDER.build())
             .build()
             .create(DeviceAPIService.class);
-    @GET("/all")
+    @GET("all")
     Observable<ResponseObject> getAllDevice();
 }
 

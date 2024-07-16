@@ -12,9 +12,9 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface DeviceItemAPIService {
-    @POST("/add")
+    @POST("add")
     Observable<ResponseObject> addDeviceItem(@Body DeviceItemRequest device);
-    @GET("/find")
+    @GET("find")
     Observable<ResponseObject> findDeviceItem(@Query("user_id") Long user_id);
 
 }
