@@ -1,7 +1,10 @@
 package com.project.smartfrigde.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,6 +53,8 @@ public class FoodRecommendFragment extends Fragment {
     private RecyclerView recyclerView;
     private  Gson gson = new Gson();
     private List<FoodRecommend> list = new ArrayList<>();
+    private String lunchMessage;
+    private String dinnerMessage;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,9 +66,26 @@ public class FoodRecommendFragment extends Fragment {
         recyclerView = fragmentFoodRecommendBinding.listFoodRecommend;
         recyclerView.setAdapter(foodRecommendAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
-        setupMessageSending();
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey("lunch")) {
+            lunchMessage = getArguments().getString("lunch");
+
+        }
+        if (bundle != null && bundle.containsKey("dinner")) {
+            dinnerMessage = getArguments().getString("dinner");
+
+        }
+        if (lunchMessage != null) {
+            setupMessageSending(Validation.FOOD_FOR_lUNCH);
+        } else if (dinnerMessage != null) {
+            setupMessageSending(Validation.FOOD_FOR_DINNER);
+
+        }else {
+            setupMessageSending(Validation.FOOD_RECOMMEND);
+        }
+
         fragmentFoodRecommendBinding.refresh.setOnClickListener(view -> {
-            setupMessageSending();
+            setupMessageSending(Validation.FOOD_RECOMMEND);
         });
         foodRecommendViewModel.getIs_loaded_data().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -94,66 +117,7 @@ public class FoodRecommendFragment extends Fragment {
         foodRecommendViewModel.getIs_loaded_data().set(false);
         return fragmentFoodRecommendBinding.getRoot();
     }
-    private void setupMessageSending() {
-            String text = "Bạn hãy gửi cho tôi 1 chuỗi json về đề xuất thức ăn và cách nấu gồm name và description và recipe , trong recipe gồm 1 list object có 2 thuộc tính là step và instruction, đây là mẫu ([{\n" +
-                    "    \"name\": \"Bánh mì kẹp thịt\",\n" +
-                    "    \"description\": \"Món ăn phổ biến với thịt bò xay, rau và nước sốt ngon miệng.\",\n" +
-                    "    \"recipe\": [\n" +
-                    "        {\n" +
-                    "            \"step\": 1,\n" +
-                    "            \"instruction\": \"Trộn thịt bò xay với muối, tiêu, hành tây băm nhỏ và gia vị yêu thích.\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 2,\n" +
-                    "            \"instruction\": \"Tạo hình viên thịt và chiên trên chảo nóng cho đến khi chín vàng đều.\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 3,\n" +
-                    "            \"instruction\": \"Cắt bánh mì thành hai phần, nướng nhẹ hoặc chiên giòn.\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 4,\n" +
-                    "            \"instruction\": \"Chuẩn bị rau như cà chua, dưa chuột, hành tây, xà lách.\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 5,\n" +
-                    "            \"instruction\": \"Cho thịt viên vào bánh mì, thêm rau, nước sốt và phô mai (nếu thích).\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 6,\n" +
-                    "            \"instruction\": \"Đóng bánh mì lại và thưởng thức.\"\n" +
-                    "        }\n" +
-                    "    ]\n" +
-                    "},{\n" +
-                    "    \"name\": \"Bánh mì kẹp thịt\",\n" +
-                    "    \"description\": \"Món ăn phổ biến với thịt bò xay, rau và nước sốt ngon miệng.\",\n" +
-                    "    \"recipe\": [\n" +
-                    "        {\n" +
-                    "            \"step\": 1,\n" +
-                    "            \"instruction\": \"Trộn thịt bò xay với muối, tiêu, hành tây băm nhỏ và gia vị yêu thích.\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 2,\n" +
-                    "            \"instruction\": \"Tạo hình viên thịt và chiên trên chảo nóng cho đến khi chín vàng đều.\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 3,\n" +
-                    "            \"instruction\": \"Cắt bánh mì thành hai phần, nướng nhẹ hoặc chiên giòn.\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 4,\n" +
-                    "            \"instruction\": \"Chuẩn bị rau như cà chua, dưa chuột, hành tây, xà lách.\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 5,\n" +
-                    "            \"instruction\": \"Cho thịt viên vào bánh mì, thêm rau, nước sốt và phô mai (nếu thích).\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"step\": 6,\n" +
-                    "            \"instruction\": \"Đóng bánh mì lại và thưởng thức.\"\n" +
-                    "        }\n" +
-                    "    ]\n" +
-                    "}]) và đừng nói gì cả";
+    private void setupMessageSending(String text) {
                 Executor executor = Executors.newSingleThreadExecutor();
                 Content content = new Content.Builder()
                         .addText(text)

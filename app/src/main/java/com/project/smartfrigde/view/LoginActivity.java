@@ -50,10 +50,11 @@ public class LoginActivity extends AppCompatActivity {
     private LinearLayout groupText;
     ActivityLoginBinding loginBinding;
     LoginViewModel loginViewModel;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences(Validation.PREF_NAME, Context.MODE_PRIVATE);
+         sharedPreferences = getSharedPreferences(Validation.PREF_NAME, Context.MODE_PRIVATE);
         progressDialog = new ProgressDialog(LoginActivity.this,R.layout.progressdialog);
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         SecurePreferencesManager.init(this);
@@ -123,12 +124,10 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResult(GetCredentialResponse result) {
                         if (loginViewModel.handleSignIn(editor,result)){
-                            loginViewModel.is_loadded_data.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-                                @Override
-                                public void onPropertyChanged(Observable sender, int propertyId) {
-                                    checkAndNavigate(loginViewModel,LoginActivity.this);
-                                }
-                            });
+                            String jsonDeviceItems = sharedPreferences.getString(Validation.KEY_DEVICE_ITEMS, null);
+                            if (jsonDeviceItems == null){
+                                loginViewModel.getListDeviceItemByUserID(editor,UserSecurePreferencesManager.getUser().getUser_id());
+                            }
                             loginViewModel.getUserLiveData().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                                 @Override
                                 public void onPropertyChanged(Observable sender, int propertyId) {
@@ -146,6 +145,14 @@ public class LoginActivity extends AppCompatActivity {
                         loginViewModel.setMessage(e);
                     }
                 });
+        loginViewModel.is_loadded_data.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (Boolean.TRUE.equals(loginViewModel.is_loadded_data.get())){
+                    checkAndNavigate(loginViewModel,LoginActivity.this);
+                }
+            }
+        });
     }
     private void checkAndNavigate(LoginViewModel viewModel, Context context) {
         if (Boolean.TRUE.equals(viewModel.is_loadded_data.get()) &&

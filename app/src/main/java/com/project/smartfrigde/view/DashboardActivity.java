@@ -1,10 +1,14 @@
 package com.project.smartfrigde.view;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.project.smartfrigde.R;
@@ -24,19 +28,20 @@ import java.util.List;
 public class DashboardActivity extends AppCompatActivity {
     private ActivityDashboardBinding activityDashboardBinding;
     List<Fragment> list = new ArrayList<>();
+    private  HomePagerAdapter homePagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         activityDashboardBinding = DataBindingUtil.setContentView(this,R.layout.activity_dashboard);
         HomeViewmodel homeViewModel = new HomeViewmodel();
-        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(this, list);
+
+         homePagerAdapter = new HomePagerAdapter(this, list);
         activityDashboardBinding.page.setAdapter(homePagerAdapter);
         list.add(new HomeFragment());
         list.add(new MealFragment());
         list.add(new FoodRecommendFragment());
         list.add(new SettingFragment());
-
         activityDashboardBinding.bottomNavigation.setOnItemSelectedListener( menuItem -> {
                 if (menuItem.getItemId() == R.id.home) {
                     activityDashboardBinding.page.setCurrentItem(0);
@@ -61,7 +66,32 @@ public class DashboardActivity extends AppCompatActivity {
                 super.onPageSelected(position);
             }
         });
-        homeViewModel.getSelectedPage().observe(this,page -> activityDashboardBinding.page.setCurrentItem(page,true));
 
+        homeViewModel.getSelectedPage().observe(this,page -> activityDashboardBinding.page.setCurrentItem(page,true));
+        if (getIntent() != null) {
+            handleIntent(getIntent());
+        }
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+    private void handleIntent(Intent intent) {
+        if (intent != null) {
+            Bundle bundle = new Bundle();
+            if (intent.hasExtra("lunch")) {
+                bundle.putString("lunch", intent.getStringExtra("lunch"));
+            }
+            if (intent.hasExtra("dinner")) {
+                bundle.putString("dinner", intent.getStringExtra("dinner"));
+            }
+            if (bundle.size() > 0) {
+                FoodRecommendFragment fragment = new FoodRecommendFragment();
+                fragment.setArguments(bundle);
+                homePagerAdapter.setBundleForFragmentAtPosition(2,bundle);
+                activityDashboardBinding.page.setCurrentItem(2);
+            }
+        }
     }
 }

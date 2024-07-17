@@ -35,6 +35,8 @@ public class MealFragment extends Fragment {
     private String[] gender = {"MALE", "FEMALE"};
     private BmiRequest bmiRequest;
     ProgressDialog progressDialog;
+    private String lunchMessage;
+    private String dinnerMessage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +95,11 @@ public class MealFragment extends Fragment {
                 }
             }
         });
+        if (getArguments() != null) {
+            lunchMessage = getArguments().getString("lunch");
+            dinnerMessage = getArguments().getString("dinner");
+        }
+
         return fragmentMealBinding.getRoot();
 
     }

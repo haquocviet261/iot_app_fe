@@ -147,8 +147,8 @@ public class LoginViewModel extends ViewModel {
                     @Override
                     public void onNext(@NonNull ResponseObject responseObject) {
 
-                        Gson gson = new Gson();
-                        String json = gson.toJson(responseObject.getData());
+                         Gson gson = new Gson();
+                         String json = gson.toJson(responseObject.getData());
                          tokenResponse = gson.fromJson(json, TokenResponse.class);
                          tokenLiveData.set(tokenResponse);
                          tokenManager.saveToken(tokenResponse.getAccess_token(),tokenResponse.getRefresh_token());
@@ -184,8 +184,8 @@ public class LoginViewModel extends ViewModel {
                         userLiveData.set (user);
                         UserSecurePreferencesManager.saveUser(user);
                         String jsonDeviceItems = sharedPreferences.getString(Validation.KEY_DEVICE_ITEMS, null);
-                        if (jsonDeviceItems != null){
-                            getListDeviceItemByUserID(editor,UserSecurePreferencesManager.getUser().getUser_id());
+                        if (jsonDeviceItems.length() == 0){
+                            getListDeviceItemByUserID(editor,user.getUser_id());
                         }
                     }
                     @Override

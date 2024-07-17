@@ -30,6 +30,7 @@ import com.project.smartfrigde.model.FoodConsum;
 import com.project.smartfrigde.model.User;
 import com.project.smartfrigde.utils.UserSecurePreferencesManager;
 import com.project.smartfrigde.utils.Validation;
+import com.project.smartfrigde.view.DashboardActivity;
 import com.project.smartfrigde.view.DetailDeviceActivity;
 import com.project.smartfrigde.view.fragment.MealFragment;
 import com.project.smartfrigde.viewmodel.WebSocketViewModel;
@@ -53,8 +54,11 @@ public class WebSocketService extends Service {
     WebSocketViewModel webSocketViewModel;
     private SharedPreferences prefs;
 
+    @SuppressLint("CheckResult")
     public WebSocketService() {
         webSocketViewModel = new WebSocketViewModel();
+
+
     }
 
     @Nullable
@@ -86,7 +90,7 @@ public class WebSocketService extends Service {
 
                 case CLOSED:
                     Log.d("WS", "Stomp connection closed", lifecycleEvent.getException());
-                    webSocketViewModel.reconnect();
+                  //  webSocketViewModel.reconnect();
                     break;
                 case FAILED_SERVER_HEARTBEAT:
                     Log.d("STOMP", "Stomp failed server heartbeat");
@@ -178,19 +182,7 @@ public class WebSocketService extends Service {
         }
     }
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            if (manager != null) {
-                manager.createNotificationChannel(channel);
-            }
-        }
-    }
+
 
     private boolean areNotificationsEnabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -219,7 +211,8 @@ public class WebSocketService extends Service {
         notificationManager.notify(1, notification);
     }
     private void pushNotificationForLunch(StompMessage stompMessage) {
-        Intent intent = new Intent(this, MealFragment.class);
+        Intent intent = new Intent(this, DashboardActivity.class);
+        intent.putExtra("lunch", stompMessage.getPayload());
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -237,7 +230,9 @@ public class WebSocketService extends Service {
         notificationManager.notify(3, notification);
     }
     private void pushNotificationForDinner(StompMessage stompMessage) {
-        Intent intent = new Intent(this, MealFragment.class);
+        Intent intent = new Intent(this, DashboardActivity.class);
+        intent.putExtra("dinner", stompMessage.getPayload());
+        intent.putExtra("navigateToFragment", true);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Smart Fridge")
@@ -254,7 +249,21 @@ public class WebSocketService extends Service {
         }
         notificationManager.notify(2, notification);
     }
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("This is the channel description");
 
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
+        }
+    }
     private void redirectToNotificationSettings() {
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -268,4 +277,5 @@ public class WebSocketService extends Service {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
 }

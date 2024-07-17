@@ -8,6 +8,7 @@
             type="com.project.smartfrigde.viewmodel.FoodRecommendViewModel" />
     </data>
     <LinearLayout
+        android:id="@+id/group_foo_r"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

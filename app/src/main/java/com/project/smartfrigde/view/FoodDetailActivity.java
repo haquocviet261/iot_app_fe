@@ -2,6 +2,7 @@ package com.project.smartfrigde.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,12 @@ public class FoodDetailActivity extends AppCompatActivity {
             list.addAll(foodRecommend.getRecipe());
 
         }
+        activityFoodDetailBinding.foodDetailBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(FoodDetailActivity.this,DashboardActivity.class));
+            }
+        });
         stepAdapter = new StepAdapter(list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView = activityFoodDetailBinding.listStep;

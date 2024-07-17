@@ -15,6 +15,7 @@ import com.project.smartfrigde.R;
 import com.project.smartfrigde.databinding.ItemFoodBinding;
 import com.project.smartfrigde.model.Food;
 import com.project.smartfrigde.model.FoodItem;
+import com.project.smartfrigde.viewmodel.DetailDeviceViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.FoodIt
     private List<FoodItem> list = new ArrayList<>();
     private String[] food_name_recommend ;
     private Context context;
+    private  DetailDeviceViewModel detailDeviceViewModel;
 
     public void setFood(List<Food> list_food) {
         this.list_food = list_food;
@@ -33,15 +35,17 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.FoodIt
         }
         notifyDataSetChanged();;
     }
-    public FoodItemAdapter(Context context,List<FoodItem> list) {
+    public FoodItemAdapter(Context context, List<FoodItem> list, DetailDeviceViewModel detailDeviceViewModel) {
         this.list = list;
         this.context = context;
+        this.detailDeviceViewModel = detailDeviceViewModel;
     }
 
     @NonNull
     @Override
     public FoodItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemFoodBinding itemFoodBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_food,parent,false);
+        itemFoodBinding.setDetailDeviceViewModel(detailDeviceViewModel);
         return new FoodItemViewHolder(itemFoodBinding);
     }
 
@@ -49,6 +53,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.FoodIt
     public void onBindViewHolder(@NonNull FoodItemViewHolder holder, int position) {
         ArrayAdapter<String> name_adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, food_name_recommend);
         holder.itemFoodBinding.foodName.setAdapter(name_adapter);
+
         holder.itemFoodBinding.foodName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -62,6 +67,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.FoodIt
                     }
                 }
                 if (index != -1) {
+                    holder.itemFoodBinding.getDetailDeviceViewModel().setFood_id(list_food.get(i).getFood_id());
                     Food selectedFood = list_food.get(index);
                     holder.itemFoodBinding.unit.setText(String.valueOf(selectedFood.getUnit()));
                     holder.itemFoodBinding.dateExpired.setText(String.valueOf(selectedFood.getDate_expired()));

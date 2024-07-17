@@ -198,7 +198,7 @@ public class HomeViewmodel extends ViewModel {
         this.isLoaddedFoodItem = isLoaddedFoodItem;
     }
 
-    public void getFoodItemByDeviceItemID(Long device_item_id){
+    public void getFoodItemByDeviceItemID(SharedPreferences.Editor editor,Long device_item_id){
         FoodItemClient.getFoodItemAPIService().getFoodItemByDeviceItemID(device_item_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -214,6 +214,9 @@ public class HomeViewmodel extends ViewModel {
                                 new TypeToken<List<FoodItemResponse>>(){}.getType()
                         );
                         list_food_item.addAll(list);
+                        String json = gson.toJson(list);
+                        editor.putString(Validation.KEY_FOOD_ITEMS, json);
+                        editor.apply();
                     }
 
                     @Override

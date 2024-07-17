@@ -1,5 +1,7 @@
 package com.project.smartfrigde.adapter;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class HomePagerAdapter extends FragmentStateAdapter {
     List<Fragment> list = new ArrayList<>();
+    private Bundle bundle;
 
     public HomePagerAdapter(@NonNull FragmentActivity fragmentActivity, List<Fragment> list) {
         super(fragmentActivity);
@@ -31,11 +34,24 @@ public class HomePagerAdapter extends FragmentStateAdapter {
             case 1:
                 return new MealFragment();
             case 2:
-                return new FoodRecommendFragment();
+                FoodRecommendFragment fragment = new FoodRecommendFragment();
+                fragment.setArguments(bundle);
+                return fragment;
             case 3:
                 return new SettingFragment();
         }
         return list.get(position);
+    }
+
+    public HomePagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+        super(fragmentActivity);
+        bundle = new Bundle();
+    }
+    public void setBundleForFragmentAtPosition(int position, Bundle bundle) {
+        if (position == 2) {
+            this.bundle = bundle;
+            notifyDataSetChanged();
+        }
     }
 
     @Override

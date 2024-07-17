@@ -3,6 +3,7 @@ package com.project.smartfrigde.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import com.project.smartfrigde.utils.Validation;
 import com.project.smartfrigde.viewmodel.DetailDeviceViewModel;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,7 @@ public class DetailDeviceActivity extends AppCompatActivity {
 
         if (jsonDevice != null){
             Type type = new TypeToken<List<DeviceItem>>() {}.getType();
-            List<DeviceItem> deviceItemList = gson.fromJson(jsonDevice, type);
+            deviceItemList = gson.fromJson(jsonDevice, type);
             detailDeviceViewModel = new DetailDeviceViewModel(deviceItemList.get(0).getDevice_name());
             activityDetailDeviceBinding.setDetailDeviceViewModel(detailDeviceViewModel);
         }
@@ -79,8 +81,12 @@ public class DetailDeviceActivity extends AppCompatActivity {
             type = new TypeToken<FoodConsum>() {}.getType();
             FoodConsum foodConsum =  gson.fromJson(jsonFoodConSump, type);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            list.add(new FoodItem(deviceItemList.get(0).getFood_name(),String.valueOf(foodConsum.getWeightOfMeat()),simpleDateFormat.format(deviceItemList.get(0).getExpiration_date())));
-            list.add(new FoodItem(deviceItemList.get(0).getFood_name(),"",simpleDateFormat.format(deviceItemList.get(0).getExpiration_date())));
+            if (foodConsum != null){
+                list.add(new FoodItem(deviceItemList.get(0).getFood_name(),"",simpleDateFormat.format(deviceItemList.get(0).getExpiration_date())));
+                list.add(new FoodItem(deviceItemList.get(0).getFood_name(),"",simpleDateFormat.format(deviceItemList.get(0).getExpiration_date())));
+            }else {
+
+            }
         }else {
             list.add(new FoodItem());
             list.add(new FoodItem());
@@ -89,8 +95,19 @@ public class DetailDeviceActivity extends AppCompatActivity {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView = activityDetailDeviceBinding.listFoodItems;
-
-        foodItemAdapter = new FoodItemAdapter(this,list);
+        detailDeviceViewModel.getOnclickFood().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (Boolean.TRUE.equals( detailDeviceViewModel.getOnclickFood().get())){
+                    try {
+                        detailDeviceViewModel.addFoodItem(deviceItemList.get(0).getDevice_item_id());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+        foodItemAdapter = new FoodItemAdapter(this,list,detailDeviceViewModel);
         foodItemAdapter.setFood(foodList);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(foodItemAdapter);
@@ -100,6 +117,18 @@ public class DetailDeviceActivity extends AppCompatActivity {
                 if (Boolean.TRUE.equals(detailDeviceViewModel.getOnclickBack().get())){
                     startActivity(new Intent(DetailDeviceActivity.this,DashboardActivity.class));
                 }
+            }
+        });
+        activityDetailDeviceBinding.floatingActionButton.setOnClickListener(view -> {
+            if (deviceItemList.get(0) != null && deviceItemList.get(1) != null){
+                detailDeviceViewModel.deleteFoodItemExpired(deviceItemList.get(0).getDevice_item_id());
+                detailDeviceViewModel.deleteFoodItemExpired(deviceItemList.get(1).getDevice_item_id());
+                list.clear();
+                list.add(new FoodItem());
+                list.add(new FoodItem());
+                foodItemAdapter = new FoodItemAdapter(this,list,detailDeviceViewModel);
+                list.get(0).setList(foodList);
+
             }
         });
     }

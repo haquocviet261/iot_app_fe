@@ -26,6 +26,7 @@ import com.project.smartfrigde.R;
 import com.project.smartfrigde.adapter.DeviceAdapter;
 import com.project.smartfrigde.bluetooth.BluetoothService;
 import com.project.smartfrigde.data.dto.request.DeviceRequest;
+import com.project.smartfrigde.data.dto.request.FoodItemRequest;
 import com.project.smartfrigde.databinding.FragmentHomeBinding;
 import com.project.smartfrigde.model.BluetoothDevice;
 import com.project.smartfrigde.model.DeviceItem;
@@ -68,11 +69,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Intent intent = new Intent(getContext(), WebSocketService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getContext().startForegroundService(intent);
-        } else {
             getContext().startService(intent);
-        }
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(Validation.PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         progressDialog = new ProgressDialog(getContext(),R.layout.progressdialog);
@@ -84,8 +81,10 @@ public class HomeFragment extends Fragment {
         recyclerView = fragmentHomeBinding.listDevice;
         recyclerView.setAdapter(deviceAdapter);
         String jsonFood = sharedPreferences.getString(Validation.KEY_FOOD_LIST, null);
+        String jsonFoodItems = sharedPreferences.getString(Validation.KEY_FOOD_ITEMS, null);
         String jsonDevices = sharedPreferences.getString(Validation.KEY_DEVICE, null);
         String jsonDeviceItems = sharedPreferences.getString(Validation.KEY_DEVICE_ITEMS, null);
+
         if (jsonFood != null) {
             Type type = new TypeToken<List<Food>>() {}.getType();
             homeViewmodel.getFoods().addAll(gson.fromJson(jsonFood, type));
@@ -98,7 +97,6 @@ public class HomeFragment extends Fragment {
         }else {
             homeViewmodel.callAPI(editor);
         }
-
         homeViewmodel.getIsDetailDevice().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
@@ -109,13 +107,15 @@ public class HomeFragment extends Fragment {
         });
         homeViewmodel.getIs_device_exist().set(View.GONE);
 
-        if (jsonDeviceItems != null){
+        if (jsonDeviceItems != null || !(jsonDeviceItems.length() == 0)){
             Type type = new TypeToken<List<DeviceItem>>() {}.getType();
             List<DeviceItem> deviceItemList = gson.fromJson(jsonDeviceItems, type);
             list.add(new BluetoothDevice(deviceItemList.get(0).getDevice_item_id(),deviceItemList.get(0).getDevice_name(),deviceItemList.get(0).getMac_address()) );
             deviceAdapter.setData(list);
             homeViewmodel.getIs_device_exist().set(View.VISIBLE);
-
+            if (jsonFoodItems == null){
+                homeViewmodel.getFoodItemByDeviceItemID(editor,deviceItemList.get(0).getDevice_item_id());
+            }
         }else {
             homeViewmodel.getIs_device_exist().set(View.GONE);
         }

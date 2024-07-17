@@ -26,7 +26,7 @@ public class WebSocketViewModel extends ViewModel {
     private static final Gson gson = new Gson();
     @SuppressLint("CheckResult")
     public WebSocketViewModel() {
-        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://192.168.11.3:9999/ws");
+        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, Validation.STOMP_WEB_SOCKET_URL);
         TokenManager tokenManager = new TokenManager();
         List<StompHeader> headers = new ArrayList<>();
         headers.add(new StompHeader("X-Authorization", "Bearer " + tokenManager.getAccessToken()));

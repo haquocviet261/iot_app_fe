@@ -79,13 +79,8 @@
             android:name=".service.WebSocketService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="connectedDevice" />
-        <service
-            android:name=".service.NotificationService"
-            android:enabled="true"
-            android:foregroundServiceType="dataSync"
-            android:exported="false"
-            tools:ignore="ForegroundServicePermission" />
+            android:foregroundServiceType="dataSync" />
+
     </application>
 
 </manifest>

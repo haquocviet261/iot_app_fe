@@ -12,7 +12,6 @@ import com.project.smartfrigde.data.remote.api.retrofit.FoodItemClient;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -29,12 +28,13 @@ public class DetailDeviceViewModel extends ViewModel {
     private ObservableField<Boolean> is_loaded_data = new ObservableField<>(false);
     private ObservableField<Boolean> onclickBack = new ObservableField<>(false);
     private ObservableField<Boolean> onclickFood = new ObservableField<>(false);
-    private ObservableField<Boolean> addTray = new ObservableField<>(false);
+    private ObservableField<Boolean> onClickDeleteTrayExpired = new ObservableField<>(false);
     private ObservableField<Boolean> deleteFooditem = new ObservableField<>(false);
     private ObservableField<String> repply_message = new ObservableField<>();
     private ObservableField<String> food_name = new ObservableField<>();
     private ObservableField<String> unit = new ObservableField<>();
     private ObservableField<String> error_message = new ObservableField<>();
+    private Long food_id ;
 
     private ObservableField<String> expired_date = new ObservableField<>();
     private ObservableField<String> device_name = new ObservableField<>();
@@ -43,6 +43,13 @@ public class DetailDeviceViewModel extends ViewModel {
         this.device_name.set(device_name);
     }
 
+    public Long getFood_id() {
+        return food_id;
+    }
+
+    public void setFood_id(Long food_id) {
+        this.food_id = food_id;
+    }
 
     public ObservableField<Boolean> getDeleteFooditem() {
         return deleteFooditem;
@@ -68,12 +75,12 @@ public class DetailDeviceViewModel extends ViewModel {
         this.onclickBack = onclickBack;
     }
 
-    public ObservableField<Boolean> getAddTray() {
-        return addTray;
+    public ObservableField<Boolean> getOnClickDeleteTrayExpired() {
+        return onClickDeleteTrayExpired;
     }
 
-    public void setAddTray(ObservableField<Boolean> addTray) {
-        this.addTray = addTray;
+    public void setOnClickDeleteTrayExpired(ObservableField<Boolean> onClickDeleteTrayExpired) {
+        this.onClickDeleteTrayExpired = onClickDeleteTrayExpired;
     }
 
     public ObservableField<String> getFood_name() {
@@ -139,13 +146,13 @@ public class DetailDeviceViewModel extends ViewModel {
     public void addFood() {
         onclickFood.set(true);
     }
-    public void onClickAddTray() {
-        addTray.set(true);
+    public void onClickDeleteTrayExpired() {
+        onClickDeleteTrayExpired.set(true);
     }
     public void onClickDeleteFoodItem() {
         deleteFooditem.set(true);
     }
-    public void addFoodItem(Long device_item_id,Long food_id) throws ParseException {
+    public void addFoodItem(Long device_item_id) throws ParseException {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         if (!checkValidInput(expired_date.get())){
             error_message.set("is number only");
