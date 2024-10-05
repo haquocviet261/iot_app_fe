@@ -26,7 +26,7 @@ public class GeminiClient {
         if (geminiAPIService == null) {
             synchronized (GeminiClient.class) {
                 if (geminiAPIService == null) {
-                    Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
                     HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
                     loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

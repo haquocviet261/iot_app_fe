@@ -39,11 +39,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     private Context context;
     private BluetoothService bluetoothService;
     private HomeViewmodel homeViewmodel;
+    private ProgressDialog progressDialog;
     public DeviceAdapter(List<BluetoothDevice> list,Context context,BluetoothService bluetoothService,HomeViewmodel homeViewmodel) {
         this.list = list;
         this.context = context;
         this.bluetoothService = bluetoothService;
         this.homeViewmodel = homeViewmodel;
+        progressDialog = new ProgressDialog(context,R.layout.progressdialog);
+
     }
 
     public BluetoothService getBluetoothService() {
@@ -70,19 +73,19 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     public void onBindViewHolder(@NonNull DeviceViewHolder holder, int position) {
         BluetoothDevice device = list.get(position);
         holder.itemDeviceBinding.setDevice(device);
+
         holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                checkAndNavigate(holder.itemDeviceBinding.getHomeViewModel(), context,device.getName());
+                progressDialog.show();
+                if (Boolean.TRUE.equals(holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().get())) {
+                    Intent intent = new Intent(context, DetailDeviceActivity.class);
+                    progressDialog.dismiss();
+                    context.startActivity(intent);
+                }
             }
         });
 
-        holder.itemDeviceBinding.getHomeViewModel().getIsLoaddedData().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                checkAndNavigate(holder.itemDeviceBinding.getHomeViewModel(), context,device.getName());
-            }
-        });
         holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().set(false);
         holder.itemDeviceBinding.detailDevice.setOnClickListener(view -> {
             openWifiSettingDialog(Gravity.CENTER);
@@ -143,13 +146,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
             this.itemDeviceBinding = itemView;
         }
     }
-    private void checkAndNavigate(HomeViewmodel viewModel, Context context,String device_name) {
-        if (Boolean.TRUE.equals(viewModel.getIsDetailDevice().get()) &&
-                Boolean.TRUE.equals(viewModel.getIsLoaddedData().get())) {
-            Intent intent = new Intent(context, DetailDeviceActivity.class);
-            intent.putExtra("list_food", viewModel.getFoods());
-            intent.putExtra("device_name", device_name);
-            context.startActivity(intent);
-        }
+    private void checkAndNavigate(HomeViewmodel viewModel, Context context) {
+
     }
 }

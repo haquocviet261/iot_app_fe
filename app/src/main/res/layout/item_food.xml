@@ -30,7 +30,6 @@
                 android:layout_weight="3"
                 android:background="@drawable/auto_complete_text_view_border"
                 android:layout_width="0dp"
-                android:text="@={detailDeviceViewModel.food_name}"
                 android:maxLines="1"
                 android:layout_height="wrap_content"/>
             <AutoCompleteTextView
@@ -41,7 +40,6 @@
                 android:maxLines="1"
                 android:background="@drawable/auto_complete_text_view_border"
                 android:layout_width="0dp"
-                android:text="@={detailDeviceViewModel.unit}"
                 android:layout_height="wrap_content"/>
             <AutoCompleteTextView
                 android:id="@+id/date_expired"
@@ -52,7 +50,6 @@
                 android:maxLines="1"
                 android:background="@drawable/auto_complete_text_view_border"
                 android:layout_width="0dp"
-                android:text="@={detailDeviceViewModel.expired_date}"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

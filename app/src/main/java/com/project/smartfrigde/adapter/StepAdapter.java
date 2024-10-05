@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.smartfrigde.R;
+import com.project.smartfrigde.databinding.ItemStepBinding;
 import com.project.smartfrigde.model.RecipeStep;
 
 import java.util.List;
@@ -31,8 +32,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
     @Override
     public void onBindViewHolder(@NonNull StepViewHolder holder, int position) {
         RecipeStep step = stepList.get(position);
-        holder.tvStep.setText("Bước " + step.getStep());
-        holder.tvInstruction.setText(step.getInstruction());
+        holder.itemStepBinding.tvStep.setText(step.getStep());
     }
 
     @Override
@@ -42,12 +42,12 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
 
     public static class StepViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvStep, tvInstruction;
+       // TextView tvStep, tvInstruction;
+        ItemStepBinding itemStepBinding;
 
-        public StepViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvStep = itemView.findViewById(R.id.tvStep);
-            tvInstruction = itemView.findViewById(R.id.tvInstruction);
+        public StepViewHolder(@NonNull ItemStepBinding itemStepBinding) {
+            super(itemStepBinding.getRoot());
+            StepViewHolder stepViewHolder = new StepViewHolder(itemStepBinding);
         }
     }
 }

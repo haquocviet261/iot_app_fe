@@ -16,12 +16,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\manh3\.android\avd\Pixel_2_API_26.avd" />
+                  <value value="C:\Users\manh3\.android\avd\Pixel_6_Pro_API_32.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-07-16T07:18:09.044699200Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-07-17T19:16:56.047943800Z" />
         </State>
       </entry>
       <entry key="Main2Activity">
@@ -48,12 +48,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\manh3\.android\avd\Pixel_2_API_26.avd" />
+                  <value value="C:\Users\manh3\.android\avd\Pixel_6_Pro_API_32.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-07-12T12:29:12.294737200Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-09-16T16:14:22.298366400Z" />
         </State>
       </entry>
       <entry key="app">

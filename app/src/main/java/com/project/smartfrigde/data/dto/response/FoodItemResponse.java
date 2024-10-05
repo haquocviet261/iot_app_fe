@@ -1,6 +1,6 @@
 package com.project.smartfrigde.data.dto.response;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class FoodItemResponse {
     private Long food_item_id;

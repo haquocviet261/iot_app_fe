@@ -14,7 +14,6 @@ public class BluetoothDevice implements Parcelable {
     private String mac;
     private android.bluetooth.BluetoothDevice bluetoothDevice;
     private BluetoothAdapter bluetoothAdapter;
-    private AddDeviceViewModel addDeviceViewModel;
 
     public BluetoothDevice() {
     }
@@ -25,12 +24,11 @@ public class BluetoothDevice implements Parcelable {
         this.mac = mac;
     }
 
-    public BluetoothDevice(Long device_item_id, String name, String mac, android.bluetooth.BluetoothDevice bluetoothDevice, AddDeviceViewModel addDeviceViewModel) {
+    public BluetoothDevice(Long device_item_id, String name, String mac, android.bluetooth.BluetoothDevice bluetoothDevice) {
         this.device_item_id = device_item_id;
         this.name = name;
         this.mac = mac;
         this.bluetoothDevice = bluetoothDevice;
-        this.addDeviceViewModel = addDeviceViewModel;
     }
 
     protected BluetoothDevice(Parcel in) {
@@ -46,14 +44,6 @@ public class BluetoothDevice implements Parcelable {
 
     public void setDevice_item_id(Long device_item_id) {
         this.device_item_id = device_item_id;
-    }
-
-    public AddDeviceViewModel getAddDeviceViewModel() {
-        return addDeviceViewModel;
-    }
-
-    public void setAddDeviceViewModel(AddDeviceViewModel addDeviceViewModel) {
-        this.addDeviceViewModel = addDeviceViewModel;
     }
 
     public static final Creator<BluetoothDevice> CREATOR = new Creator<BluetoothDevice>() {

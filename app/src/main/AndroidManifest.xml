@@ -31,6 +31,7 @@
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:debuggable="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -38,10 +39,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartFrigde"
         android:usesCleartextTraffic="true"
+        tools:ignore="HardcodedDebugMode"
         tools:targetApi="31">
         <activity
-            android:name=".view.Main2Activity"
-            android:exported="true" />
+            android:name=".view.MainActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".view.FoodDetailActivity"
             android:exported="false" />
@@ -51,7 +59,6 @@
         <activity
             android:name=".view.DetailDeviceActivity"
             android:exported="false" />
-
         <activity
             android:name=".view.AddDeviceActivity"
             android:exported="true" />
@@ -67,11 +74,7 @@
         <activity
             android:name=".view.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <service android:name=".data.remote.websocket.WebSocketService" />
@@ -80,7 +83,6 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
-
     </application>
 
 </manifest>

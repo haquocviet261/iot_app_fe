@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,14 +33,21 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.project.smartfrigde.R;
 import com.project.smartfrigde.adapter.DeviceScanAdapter;
 import com.project.smartfrigde.bluetooth.BluetoothService;
+import com.project.smartfrigde.data.dto.request.DeviceRequest;
 import com.project.smartfrigde.databinding.ActivityAddDeviceBinding;
 import com.project.smartfrigde.model.User;
+import com.project.smartfrigde.utils.ProgressDialog;
 import com.project.smartfrigde.utils.UserSecurePreferencesManager;
+import com.project.smartfrigde.utils.Validation;
 import com.project.smartfrigde.viewmodel.AddDeviceViewModel;
+import com.project.smartfrigde.viewmodel.HomeViewmodel;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -48,32 +56,53 @@ public class AddDeviceActivity extends AppCompatActivity {
 
     private static final int REQUEST_DISCOVER_BT = 1;
     private BluetoothAdapter bluetoothAdapter;
+    private final Gson gson = new Gson();
     AddDeviceViewModel addDeviceViewModel ;
     ActivityAddDeviceBinding activityAddDeviceBinding;
     private RecyclerView recyclerView;
     DeviceScanAdapter deviceScanAdapter;
     private ActivityResultLauncher<Intent> enableBluetoothLauncher;
     User user = UserSecurePreferencesManager.getUser();
-    private Long device_id;
-
+    private SharedPreferences sharedPreferences;
+    private  HomeViewmodel homeViewmodel;
+    private List<DeviceRequest> deviceRequestList;
     List<com.project.smartfrigde.model.BluetoothDevice> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        if ( intent.hasExtra("device_id")){
-            device_id = intent.getLongExtra("device_id",-1L);
+        homeViewmodel = new HomeViewmodel();
+        addDeviceViewModel = new AddDeviceViewModel(user.getUser_id());
+        sharedPreferences = getSharedPreferences(Validation.PREF_NAME, Context.MODE_PRIVATE);
+        String jsonDevices = sharedPreferences.getString(Validation.KEY_DEVICE, null);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (jsonDevices != null){
+            Type type = new TypeToken<List<DeviceRequest>>() {}.getType();
+             deviceRequestList = gson.fromJson(jsonDevices, type);
+            addDeviceViewModel.setDevice_id(deviceRequestList.get(0).getDevice_id());
+        }else {
+            addDeviceViewModel.callAPI(editor);
+            addDeviceViewModel.getIs_scan().set(View.GONE);
         }
-        addDeviceViewModel = new AddDeviceViewModel(device_id,user.getUser_id());
+        addDeviceViewModel.getIs_loadded_data().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (Boolean.TRUE.equals(homeViewmodel.getIsLoaddedData().get())){
+                    addDeviceViewModel.setDevice_id(addDeviceViewModel.getList_device().get(0).getDevice_id());
+                    addDeviceViewModel.getIs_scan().set(View.VISIBLE);
+                }
+            }
+        });
+
         activityAddDeviceBinding = DataBindingUtil.setContentView(this,R.layout.activity_add_device);
         activityAddDeviceBinding.setAddDeviceViewModel(addDeviceViewModel);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView = activityAddDeviceBinding.listDeviceScan;
-        deviceScanAdapter = new DeviceScanAdapter(list,this);
+        deviceScanAdapter = new DeviceScanAdapter(list,this,addDeviceViewModel);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(deviceScanAdapter);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
+
         enableBluetoothLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -89,6 +118,7 @@ public class AddDeviceActivity extends AppCompatActivity {
 
         if (bluetoothAdapter == null) {
             showToast("Your device Does not support Bluetooth !");
+            startActivity(new Intent(this, DashboardActivity.class));
             return;
         }
         if (!bluetoothAdapter.isEnabled()) {
@@ -125,7 +155,8 @@ public class AddDeviceActivity extends AppCompatActivity {
                 }
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
-                list.add(new com.project.smartfrigde.model.BluetoothDevice(null,deviceName,deviceHardwareAddress,device,addDeviceViewModel));
+                com.project.smartfrigde.model.BluetoothDevice bluetoothDevice = new com.project.smartfrigde.model.BluetoothDevice(null,deviceName,deviceHardwareAddress,device);
+                list.add(bluetoothDevice);
                 deviceScanAdapter.setData(list);
             }
         }

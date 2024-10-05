@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FoodItemClient {
     private static final String FOOD_URL = "/api/food/item/";
-    private static final Gson GSON = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+    private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
     private static final HttpLoggingInterceptor HTTP_LOGGING_INTERCEPTOR =
             new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);

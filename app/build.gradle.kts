@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.project.smartfrigde"
-        minSdk = 26
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.constraintlayout)
     implementation(libs.activity.v190)
+    implementation(libs.cardview)
     testImplementation(libs.junit)
     implementation (libs.rxjava2.rxjava)
     implementation (libs.rxjava2.rxandroid)

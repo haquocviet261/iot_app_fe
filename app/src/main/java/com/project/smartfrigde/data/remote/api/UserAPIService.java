@@ -36,44 +36,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UserAPIService {
-    String USER_URL = "/api/user/";
-    Gson GSON = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-    HttpLoggingInterceptor HTTP_LOGGING_INTERCEPTOR = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
-     Interceptor INTERCEPTOR = new Interceptor() {
-        @NonNull
-        @Override
-        public Response intercept(@NonNull Chain chain) throws IOException {
-            TokenManager tokenManager = new TokenManager();
-            String token;
-            Request original = chain.request();
-            token = tokenManager.getAccessToken();
-            String path = original.url().encodedPath();
-            if (path.contains("api/user/authenticate")) {
-                return chain.proceed(original);
-            }
-            if (path.contains("oauth2/google")) {
-                token = tokenManager.getAccessOauth2Token();
-            }
-                Request request = original.newBuilder()
-                        .header("Authorization", "Bearer " + token)
-                        .method(original.method(), original.body())
-                        .build();
-                return chain.proceed(request);
-        }
-    };
-    OkHttpClient.Builder BUILDER = new OkHttpClient.Builder()
-            .readTimeout(120, TimeUnit.SECONDS)
-            .connectTimeout(120, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .addInterceptor(INTERCEPTOR)
-            .addInterceptor(HTTP_LOGGING_INTERCEPTOR);
-     UserAPIService USER_API_SERVICE = new Retrofit.Builder()
-            .baseUrl(Validation.WEB_SERVICE_URL+USER_URL)
-            .addConverterFactory(GsonConverterFactory.create(GSON))
-             .addCallAdapterFactory(RxJava3CallAdapterFactory.createAsync())
-             .client(BUILDER.build())
-            .build()
-            .create(UserAPIService.class);
+
     @GET("/logout")
     Observable<ResponseObject> logout();
 
@@ -110,5 +73,7 @@ public interface UserAPIService {
 
     @GET("oauth2/google")
     Observable<ResponseObject> sendToken();
+    @GET("posts")
+    Observable<ResponseObject> getListUsers();
 
 }

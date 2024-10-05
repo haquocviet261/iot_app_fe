@@ -35,8 +35,7 @@ public class MealFragment extends Fragment {
     private String[] gender = {"MALE", "FEMALE"};
     private BmiRequest bmiRequest;
     ProgressDialog progressDialog;
-    private String lunchMessage;
-    private String dinnerMessage;
+    private boolean isCaculatedCalories = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +48,18 @@ public class MealFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         ProgressDialog progressDialog = new ProgressDialog(getContext(),R.layout.progressdialog);
         String jsonBMI = sharedPreferences.getString(Validation.KEY_BMI, null);
-        if (jsonBMI != null) {
+        String jsonConSum = sharedPreferences.getString(Validation.KEY_FOOD_CONSUMED, null);
+        String jsonFoodConSumEndDay = sharedPreferences.getString(Validation.KEY_FOOD_CONSUMED_END_DAY, null);
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey("calories") && (jsonConSum != null && !jsonConSum.equals("[]")) && ((jsonFoodConSumEndDay != null) && (!jsonFoodConSumEndDay.equals("[]")))) {
+            Type type = new TypeToken<BmiRequest>() {}.getType();
+            bmiRequest =  gson.fromJson(jsonBMI, type);
+            BmiRequest bmiEnday = gson.fromJson(jsonFoodConSumEndDay, type);
+            bmiViewModel.setBmiRequest(bmiRequest);
+            bmiViewModel.bindingCaloriesToday(bmiEnday);
+            bmiViewModel.getIs_show_calories().set(true);
+            isCaculatedCalories = true;
+        }if (jsonBMI != null && !jsonBMI.equals("[]") && !isCaculatedCalories) {
             progressDialog.dismiss();
             Type type = new TypeToken<BmiRequest>() {}.getType();
             bmiRequest =  gson.fromJson(jsonBMI, type);
@@ -95,10 +105,6 @@ public class MealFragment extends Fragment {
                 }
             }
         });
-        if (getArguments() != null) {
-            lunchMessage = getArguments().getString("lunch");
-            dinnerMessage = getArguments().getString("dinner");
-        }
 
         return fragmentMealBinding.getRoot();
 

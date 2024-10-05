@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(animatorGroupImages, animatorGroupText);
-        animatorSet.setDuration(1000); // duration in milliseconds
+        animatorSet.setDuration(1000);
         animatorSet.start();
     }
     private void initiateGoogleSignIn(SharedPreferences.Editor editor){
@@ -124,14 +124,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResult(GetCredentialResponse result) {
                         if (loginViewModel.handleSignIn(editor,result)){
-                            String jsonDeviceItems = sharedPreferences.getString(Validation.KEY_DEVICE_ITEMS, null);
-                            if (jsonDeviceItems == null){
-                                loginViewModel.getListDeviceItemByUserID(editor,UserSecurePreferencesManager.getUser().getUser_id());
-                            }
-                            loginViewModel.getUserLiveData().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+
+                            loginViewModel.getIsLoaddedUsser().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                                 @Override
                                 public void onPropertyChanged(Observable sender, int propertyId) {
-                                    checkAndNavigate(loginViewModel,LoginActivity.this);
+                                   if (Boolean.TRUE.equals(loginViewModel.getIsLoaddedUsser().get())){
+                                       String jsonDeviceItems = sharedPreferences.getString(Validation.KEY_DEVICE_ITEMS, null);
+                                       if (jsonDeviceItems == null || jsonDeviceItems.equals("[]")){
+                                           loginViewModel.getListDeviceItemByUserID(editor,UserSecurePreferencesManager.getUser().getUser_id());
+                                       }else {
+                                           checkAndNavigate(loginViewModel,LoginActivity.this);
+                                       }
+                                   }
                                 }
                             });
                         }else {
@@ -142,7 +146,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onError(GetCredentialException e) {
                         Log.e("LoginActivity", "Error getting Google credentials: " + e.getMessage());
-                        loginViewModel.setMessage(e);
                     }
                 });
         loginViewModel.is_loadded_data.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
@@ -153,12 +156,13 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
     private void checkAndNavigate(LoginViewModel viewModel, Context context) {
-        if (Boolean.TRUE.equals(viewModel.is_loadded_data.get()) &&
+        if (Boolean.TRUE.equals(viewModel.getIsLoaddedUsser().get()) &&
                 viewModel.getUserLiveData().get() != null) {
                 progressDialog.dismiss();
-                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                Intent intent = new Intent(context, DashboardActivity.class);
                 startActivity(intent);
         }
     }
