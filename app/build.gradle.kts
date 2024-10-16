@@ -85,6 +85,8 @@ dependencies {
     implementation ("com.github.shobhitpuri:custom-google-signin-button:2.0.0")
     implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
 
+    implementation (libs.viewpager2)
+
     // Required for one-shot operations (to use `ListenableFuture` from Guava Android)
     implementation("com.google.guava:guava:31.0.1-android")
 
