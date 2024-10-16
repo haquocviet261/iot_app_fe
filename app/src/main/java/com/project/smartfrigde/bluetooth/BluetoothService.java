@@ -1,7 +1,6 @@
 package com.project.smartfrigde.bluetooth;
 
 import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
@@ -11,9 +10,6 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.UUID;
 
 public class BluetoothService extends Thread {

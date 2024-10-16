@@ -14,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.project.smartfrigde.R;
 import com.project.smartfrigde.adapter.HomePagerAdapter;
 import com.project.smartfrigde.databinding.ActivityDashboardBinding;
+import com.project.smartfrigde.model.BluetoothDevice;
 import com.project.smartfrigde.model.User;
 import com.project.smartfrigde.utils.UserSecurePreferencesManager;
 import com.project.smartfrigde.view.fragment.FoodRecommendFragment;
@@ -35,13 +36,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         activityDashboardBinding = DataBindingUtil.setContentView(this,R.layout.activity_dashboard);
         HomeViewmodel homeViewModel = new HomeViewmodel();
-
-         homePagerAdapter = new HomePagerAdapter(this, list);
-        activityDashboardBinding.page.setAdapter(homePagerAdapter);
         list.add(new HomeFragment());
         list.add(new MealFragment());
         list.add(new FoodRecommendFragment());
         list.add(new SettingFragment());
+         homePagerAdapter = new HomePagerAdapter(this,list);
+        activityDashboardBinding.page.setAdapter(homePagerAdapter);
         activityDashboardBinding.bottomNavigation.setOnItemSelectedListener( menuItem -> {
                 if (menuItem.getItemId() == R.id.home) {
                     activityDashboardBinding.page.setCurrentItem(0);
@@ -68,18 +68,17 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         homeViewModel.getSelectedPage().observe(this,page -> activityDashboardBinding.page.setCurrentItem(page,true));
-        if (getIntent() != null) {
+        if (getIntent() != null ) {
             handleIntent(getIntent());
         }
     }
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        handleIntent(intent);
     }
     private void handleIntent(Intent intent) {
-        if (intent != null) {
-            Bundle bundle = new Bundle();
+        Bundle bundle = new Bundle();
+        if (intent != null && (intent.hasExtra("lunch") || intent.hasExtra("dinner"))) {
             if (intent.hasExtra("lunch")) {
                 bundle.putString("lunch", intent.getStringExtra("lunch"));
             }
@@ -89,8 +88,28 @@ public class DashboardActivity extends AppCompatActivity {
             if (bundle.size() > 0) {
                 FoodRecommendFragment fragment = new FoodRecommendFragment();
                 fragment.setArguments(bundle);
-                homePagerAdapter.setBundleForFragmentAtPosition(2,bundle);
+                homePagerAdapter.setFoodRecommendFragmentBundle(bundle);
                 activityDashboardBinding.page.setCurrentItem(2);
+            }
+        }
+        if (intent != null && intent.hasExtra("calories")) {
+            BluetoothDevice bluetoothDevice = intent.getParcelableExtra("device");
+            bundle.putParcelable("device",bluetoothDevice);
+            if (bundle.size() > 0) {
+                MealFragment fragment = new MealFragment();
+                fragment.setArguments(bundle);
+                homePagerAdapter.setHomeFragmentBundle(bundle);
+                activityDashboardBinding.page.setCurrentItem(1);
+            }
+        }
+        if (intent != null && intent.hasExtra("device")) {
+            BluetoothDevice bluetoothDevice = intent.getParcelableExtra("device");
+            bundle.putParcelable("device",bluetoothDevice);
+            if (bundle.size() > 0) {
+                HomeFragment fragment = new HomeFragment();
+                fragment.setArguments(bundle);
+                homePagerAdapter.setHomeFragmentBundle(bundle);
+                activityDashboardBinding.page.setCurrentItem(0);
             }
         }
     }

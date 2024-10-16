@@ -1,5 +1,7 @@
 package com.project.smartfrigde.viewmodel;
 
+import android.view.View;
+
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
@@ -38,6 +40,7 @@ public class ChatViewModel extends ViewModel {
     private ObservableField<Boolean> is_loaded_data = new ObservableField<>(false);
     private ObservableField<Boolean> onclickBack = new ObservableField<>(false);
     private ObservableField<String> repply_message = new ObservableField<>();
+    private ObservableField<Integer> is_greeting = new ObservableField<>(View.VISIBLE);
     private ObservableField<String> is_loadded_message = new ObservableField<>();
 
     private GeminiAPIService geminiAPIService;
@@ -76,6 +79,14 @@ public class ChatViewModel extends ViewModel {
 
     public void setRepply_message(ObservableField<String> repply_message) {
         this.repply_message = repply_message;
+    }
+
+    public ObservableField<Integer> getIs_greeting() {
+        return is_greeting;
+    }
+
+    public void setIs_greeting(ObservableField<Integer> is_greeting) {
+        this.is_greeting = is_greeting;
     }
 
     public void sendMessage(String msg){

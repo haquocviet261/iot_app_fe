@@ -205,6 +205,15 @@ public class BMIViewModel extends ViewModel {
         total_calories.set("You Need To Eat: "+String.valueOf(bmiRequest.getCalories().intValue()));
         isLoadCalories.set(true);
     }
+    public void bindingCaloriesToday( BmiRequest bmiRequest){
+
+        weight.set(this.bmiRequest.getWeight()+" kg");
+        height.set(this.bmiRequest.getHeight()+" cm");
+        age.set(this.bmiRequest.getAge());
+        gender.set(this.bmiRequest.getGender().name());
+        total_calories.set("Today You ate: " + bmiRequest.getCalories().intValue() + "/"+bmiRequest.getCalories().intValue());
+        isLoadCalories.set(true);
+    }
     @Override
     protected void onCleared() {
         super.onCleared();

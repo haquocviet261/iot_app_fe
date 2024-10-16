@@ -102,6 +102,7 @@ public class FoodRecommendFragment extends Fragment {
                                     foodList.remove(i);
                                 }
                             }
+                            list.clear();
                             list.addAll(foodList);
                             foodRecommendAdapter.setData(list);
                         } catch (Exception e) {

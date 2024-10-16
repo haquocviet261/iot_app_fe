@@ -1,9 +1,5 @@
 package com.project.smartfrigde.data.dto.request;
 public class UserStatusRequest {
-
-
-
-
     private Long user_id;
     private String user_name;
     private String first_name;

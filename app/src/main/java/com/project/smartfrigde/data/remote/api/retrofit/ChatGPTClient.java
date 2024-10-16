@@ -19,7 +19,7 @@ import java.io.IOException;
 public class ChatGPTClient {
     private static final String CHAT_GPT_URL = "https://api.openai.com/";
 
-    private static final Gson GSON = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+    private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
     private static final HttpLoggingInterceptor HTTP_LOGGING_INTERCEPTOR =
             new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);

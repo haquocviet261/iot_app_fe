@@ -82,20 +82,14 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(deviceAdapter);
         String jsonFood = sharedPreferences.getString(Validation.KEY_FOOD_LIST, null);
         String jsonFoodItems = sharedPreferences.getString(Validation.KEY_FOOD_ITEMS, null);
-        String jsonDevices = sharedPreferences.getString(Validation.KEY_DEVICE, null);
         String jsonDeviceItems = sharedPreferences.getString(Validation.KEY_DEVICE_ITEMS, null);
-
-        if (jsonFood != null) {
+//        sharedPreferences.edit().remove(Validation.KEY_DEVICE_ITEMS);
+//        sharedPreferences.edit().apply();
+        if (jsonFood != null && !jsonFood.equals("[]")) {
             Type type = new TypeToken<List<Food>>() {}.getType();
             homeViewmodel.getFoods().addAll(gson.fromJson(jsonFood, type));
         } else {
             homeViewmodel.getAllFood(editor);
-        }
-        if (jsonDevices != null){
-            Type type = new TypeToken<List<DeviceRequest>>() {}.getType();
-            homeViewmodel.getFoods().addAll(gson.fromJson(jsonDevices, type));
-        }else {
-            homeViewmodel.callAPI(editor);
         }
         homeViewmodel.getIsDetailDevice().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -107,23 +101,23 @@ public class HomeFragment extends Fragment {
         });
         homeViewmodel.getIs_device_exist().set(View.GONE);
 
-        if (jsonDeviceItems != null || !(jsonDeviceItems.length() == 0)){
+        if (!jsonDeviceItems.equals("[]")){
             Type type = new TypeToken<List<DeviceItem>>() {}.getType();
             List<DeviceItem> deviceItemList = gson.fromJson(jsonDeviceItems, type);
             list.add(new BluetoothDevice(deviceItemList.get(0).getDevice_item_id(),deviceItemList.get(0).getDevice_name(),deviceItemList.get(0).getMac_address()) );
             deviceAdapter.setData(list);
             homeViewmodel.getIs_device_exist().set(View.VISIBLE);
-            if (jsonFoodItems == null){
+            if ((jsonFoodItems != null)){
                 homeViewmodel.getFoodItemByDeviceItemID(editor,deviceItemList.get(0).getDevice_item_id());
             }
         }else {
             homeViewmodel.getIs_device_exist().set(View.GONE);
         }
-        Intent add_device_intent = getActivity().getIntent();
-        if ( add_device_intent.hasExtra("device")){
-            bluetoothDevice =  intent.getParcelableExtra("device");
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey("device")){
+            bluetoothDevice =  bundle.getParcelable("device");
             homeViewmodel.getIs_device_exist().set(View.VISIBLE);
-            BluetoothService bluetoothService = new BluetoothService(getContext(),bluetoothDevice.getBluetoothDevice());
+            BluetoothService bluetoothService = new BluetoothService(getContext(),bluetoothDevice.getBluetoothDevice());//bluetoothDevice.getBluetoothDevice() is null here
             bluetoothService.start();
             list.add(bluetoothDevice);
             deviceAdapter.setData(list);
@@ -143,8 +137,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        homeViewmodel.getIs_loadded_data().set(false);
-        homeViewmodel.getIs_loadded_data().set(false);
         homeViewmodel.getChat_now().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {

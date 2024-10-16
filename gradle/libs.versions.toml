@@ -35,6 +35,7 @@ rxjava3RetrofitAdapter = "3.0.0"
 rxjavaVersion = "2.2.19"
 securityCrypto = "1.1.0-alpha06"
 viewpager2 = "1.1.0"
+cardview = "1.0.0"
 
 [libraries]
 activity-v190 = { module = "androidx.activity:activity", version.ref = "activityVersion" }
@@ -76,6 +77,8 @@ rxjava2-rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava
 rxjava3-retrofit-adapter = { module = "com.github.akarnokd:rxjava3-retrofit-adapter", version.ref = "rxjava3RetrofitAdapter" }
 security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

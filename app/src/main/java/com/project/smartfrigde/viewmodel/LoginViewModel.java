@@ -20,13 +20,11 @@ import com.project.smartfrigde.data.dto.response.ResponseObject;
 import com.project.smartfrigde.data.dto.response.TokenResponse;
 import com.project.smartfrigde.data.remote.api.retrofit.DeviceItemClient;
 import com.project.smartfrigde.model.DeviceItem;
-import com.project.smartfrigde.model.Food;
 import com.project.smartfrigde.model.User;
 import com.project.smartfrigde.utils.TokenManager;
 import com.project.smartfrigde.utils.UserSecurePreferencesManager;
 import com.project.smartfrigde.utils.Validation;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -48,15 +46,15 @@ public class LoginViewModel extends ViewModel {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private ObservableField<TokenResponse> tokenLiveData = new ObservableField<>();
     private ObservableField<User> userLiveData = new ObservableField<>();
-    private ObservableField<String> errorMessageLiveData = new ObservableField<>();
+    private ObservableField<Boolean> isLoaddedUsser = new ObservableField<>();
     private  ObservableField<Boolean> isLoadingLiveData = new ObservableField<>(false);
     public ObservableArrayList<DeviceItem> list_device_item = new ObservableArrayList<>();
     public ObservableField<Boolean> is_loadded_data = new ObservableField<>(false);
 
     private TokenResponse tokenResponse;
     private final TokenManager tokenManager  = new TokenManager();
-    public void setErrorMessageLiveData(ObservableField<String> errorMessageLiveData) {
-        this.errorMessageLiveData = errorMessageLiveData;
+    public void setIsLoaddedUsser(ObservableField<Boolean> isLoaddedUsser) {
+        this.isLoaddedUsser = isLoaddedUsser;
     }
     private  SharedPreferences sharedPreferences;
     public LoginViewModel(SharedPreferences sharedPreferences) {
@@ -114,8 +112,8 @@ public class LoginViewModel extends ViewModel {
         this.is_loadded_data = is_loadded_data;
     }
 
-    public ObservableField<String> getErrorMessageLiveData() {
-        return errorMessageLiveData;
+    public ObservableField<Boolean> getIsLoaddedUsser() {
+        return isLoaddedUsser;
     }
 
     public ObservableField<Boolean> getIsLoadingLiveData() {
@@ -136,67 +134,61 @@ public class LoginViewModel extends ViewModel {
 
     private void sendTokenOauth2(SharedPreferences.Editor editor,String token){
         tokenManager.saveOauth2AccessToken(token);
-        UserAPIService.USER_API_SERVICE.sendToken()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-                    @Override
-                    public void onNext(@NonNull ResponseObject responseObject) {
-
-                         Gson gson = new Gson();
-                         String json = gson.toJson(responseObject.getData());
-                         tokenResponse = gson.fromJson(json, TokenResponse.class);
-                         tokenLiveData.set(tokenResponse);
-                         tokenManager.saveToken(tokenResponse.getAccess_token(),tokenResponse.getRefresh_token());
-                        if (checkUserExist()){
-                            fetchUser(editor);
-                        }
-                    }
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        errorMessageLiveData.set("Error: " + e.getMessage());
-                    }
-                    @Override
-                    public void onComplete() {
-                    }
-                });
+//        UserAPIService.USER_API_SERVICE.sendToken()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<ResponseObject>() {
+//                    @Override
+//                    public void onSubscribe(@NonNull Disposable d) {
+//                        compositeDisposable.add(d);
+//                    }
+//                    @Override
+//                    public void onNext(@NonNull ResponseObject responseObject) {
+//
+//                         Gson gson = new Gson();
+//                         String json = gson.toJson(responseObject.getData());
+//                         tokenResponse = gson.fromJson(json, TokenResponse.class);
+//                         tokenLiveData.set(tokenResponse);
+//                         tokenManager.saveToken(tokenResponse.getAccess_token(),tokenResponse.getRefresh_token());
+//                            fetchUser();
+//                    }
+//                    @Override
+//                    public void onError(@NonNull Throwable e) {
+//                    }
+//                    @Override
+//                    public void onComplete() {
+//                    }
+//                });
     }
 
-    public void fetchUser(SharedPreferences.Editor editor){
-        UserAPIService.USER_API_SERVICE.showProfile(Validation.extractUserID(tokenManager.getAccessToken()))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull ResponseObject responseObject) {
-                        Gson gson = new Gson();
-                        String userJson = gson.toJson(responseObject.getData());
-                        User user = gson.fromJson(userJson,User.class);
-                        userLiveData.set (user);
-                        UserSecurePreferencesManager.saveUser(user);
-                        String jsonDeviceItems = sharedPreferences.getString(Validation.KEY_DEVICE_ITEMS, null);
-                        if (jsonDeviceItems.length() == 0){
-                            getListDeviceItemByUserID(editor,user.getUser_id());
-                        }
-                    }
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        errorMessageLiveData.set("Error: " + e.getMessage());
-                    }
-                    @Override
-                    public void onComplete() {
-                        errorMessageLiveData.set("Call api success !");
-                    }
-                });
+    public void fetchUser(){
+//        UserAPIService.USER_API_SERVICE.showProfile(Validation.extractUserID(tokenManager.getAccessToken()))
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<ResponseObject>() {
+//                    @Override
+//                    public void onSubscribe(@NonNull Disposable d) {
+//                        compositeDisposable.add(d);
+//                    }
+//
+//                    @Override
+//                    public void onNext(@NonNull ResponseObject responseObject) {
+//                        Gson gson = new Gson();
+//                        String userJson = gson.toJson(responseObject.getData());
+//                        User user = gson.fromJson(userJson,User.class);
+//                        userLiveData.set (user);
+//                        UserSecurePreferencesManager.saveUser(user);
+//                        isLoaddedUsser.set(true);
+//                    }
+//                    @Override
+//                    public void onError(@NonNull Throwable e) {
+//                        isLoaddedUsser.set(false);
+//                    }
+//                    @Override
+//                    public void onComplete() {
+//                        isLoaddedUsser.set(true);
+//                    }
+//                });
     }
     @Override
     protected void onCleared() {
@@ -218,10 +210,11 @@ public class LoginViewModel extends ViewModel {
                                 new TypeToken<List<DeviceItem>>(){}.getType()
                         );
                         list_device_item.addAll(list);
-                        is_loadded_data.set(true);
+
                         String json = gson.toJson(list);
                         editor.putString(Validation.KEY_DEVICE_ITEMS, json);
                         editor.apply();
+                        is_loadded_data.set(true);
                     }
 
                     @Override
@@ -235,9 +228,7 @@ public class LoginViewModel extends ViewModel {
                     }
                 });
     }
-    public void setMessage(GetCredentialException e) {
-        errorMessageLiveData.set(e.getMessage());
-    }
+
     public boolean handleSignIn(SharedPreferences.Editor editor,GetCredentialResponse result) {
         Credential credential = result.getCredential();
             if (GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL.equals(credential.getType())) {
@@ -247,12 +238,6 @@ public class LoginViewModel extends ViewModel {
                 return true;
             }
             return false;
-    }
-    public boolean checkUserExist(){
-        if (UserSecurePreferencesManager.getUser() != null){
-            return true;
-        }
-        return false;
     }
 
 }

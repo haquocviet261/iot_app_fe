@@ -22,13 +22,14 @@ public class Validation {
     public static final String KEY_DEVICE_ITEMS = "device_items";
     public static final String KEY_FOOD_ITEMS = "food_items";
     public static final String KEY_FOOD_CONSUMED = "food_consumed";
+    public static final String KEY_FOOD_CONSUMED_END_DAY = "food_consumed";
 
     public static final String KEY_BMI = "bmi_user";
     public static final String KEY_DEVICE = "device_list";
     public static final String STOMP_WEB_SOCKET_URL = "ws://haquocviet261.click:8888/ws";
     //192.168.1.14
     public static final String WEB_SOCKET_URL = "ws://haquocviet261.click:8888/handle";
-    public static final String WEB_SERVICE_URL = "http://haquocviet261.click:8888";
+    public static final String WEB_SERVICE_URL = "https://jsonplaceholder.typicode.com/";
     public static final int TYPE_USER = 0;
     public static final int TYPE_BOT = 1;
     public static final int TYPE_LOADING = 2;

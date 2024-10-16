@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +41,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.wifi_dialog);
         activityConversationUserBinding = DataBindingUtil.setContentView(this, R.layout.activity_conversation_user);
         chatViewModel = new ChatViewModel();
         recyclerView = activityConversationUserBinding.chatContent;
@@ -85,11 +87,11 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-
     private void setupMessageSending() {
         activityConversationUserBinding.sendButton.setOnClickListener(v -> {
             String text = activityConversationUserBinding.messageText.getText().toString();
             if (!text.equals("")) {
+                chatViewModel.getIs_greeting().set(View.GONE);
                 Executor executor = Executors.newSingleThreadExecutor();
 
                 Content content = new Content.Builder()

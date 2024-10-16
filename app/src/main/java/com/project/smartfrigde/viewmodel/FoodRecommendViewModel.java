@@ -117,6 +117,7 @@ public class FoodRecommendViewModel extends ViewModel {
                     public void onSuccess(GenerateContentResponse result) {
                         String resultText = result.getText();
                         repply_message.set(resultText);
+
                         is_loaded_data.set(true);
                     }
                     @Override

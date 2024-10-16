@@ -117,19 +117,22 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
     @SuppressLint("NotifyDataSetChanged")
-    public void addLoading(){
-        isLoading = true;
-        list.add(new ChatMessage(Validation.TYPE_LOADING,""));
-        notifyDataSetChanged();
+    public void addLoading() {
+        if (!isLoading) {
+            isLoading = true;
+            list.add(new ChatMessage(Validation.TYPE_LOADING, ""));
+            notifyItemInserted(list.size() - 1);
+        }
     }
-    @SuppressLint("NotifyDataSetChanged")
-    public void removeLoading(){
-        isLoading = false;
-        for (int i = list.size()-1; i >= 0; i--) {
-            if (list.get(i).getMessage_type() == Validation.TYPE_LOADING){
+
+    public void removeLoading() {
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (list.get(i).getMessage_type() == Validation.TYPE_LOADING) {
                 list.remove(i);
+                notifyItemRemoved(i);
+                break; // Ngừng vòng lặp sau khi xóa phần tử loading
             }
         }
-        notifyDataSetChanged();
+        isLoading = false;
     }
 }

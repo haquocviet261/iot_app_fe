@@ -17,45 +17,62 @@ import java.util.List;
 
 public class HomePagerAdapter extends FragmentStateAdapter {
     List<Fragment> list = new ArrayList<>();
-    private Bundle bundle;
+    private Bundle homeFragmentBundle;
+    private Bundle mealFragmentBundle;
+    private Bundle foodRecommendFragmentBundle;
 
-    public HomePagerAdapter(@NonNull FragmentActivity fragmentActivity, List<Fragment> list) {
+    public HomePagerAdapter(@NonNull FragmentActivity fragmentActivity,List<Fragment> list) {
         super(fragmentActivity);
+        homeFragmentBundle = new Bundle();
+        foodRecommendFragmentBundle = new Bundle();
+        mealFragmentBundle = new Bundle();
         this.list = list;
     }
-
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new HomeFragment();
+                HomeFragment homeFragment = new HomeFragment();
+                homeFragment.setArguments(homeFragmentBundle);
+                return homeFragment;
             case 1:
-                return new MealFragment();
+                MealFragment mealFragment = new MealFragment();
+                mealFragment.setArguments(mealFragmentBundle);
+                return mealFragment;
             case 2:
-                FoodRecommendFragment fragment = new FoodRecommendFragment();
-                fragment.setArguments(bundle);
-                return fragment;
+                FoodRecommendFragment foodRecommendFragment = new FoodRecommendFragment();
+                foodRecommendFragment.setArguments(foodRecommendFragmentBundle);
+                return foodRecommendFragment;
             case 3:
                 return new SettingFragment();
         }
         return list.get(position);
     }
 
-    public HomePagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-        super(fragmentActivity);
-        bundle = new Bundle();
+    @Override
+    public int getItemCount() {
+        return list.size();
     }
-    public void setBundleForFragmentAtPosition(int position, Bundle bundle) {
-        if (position == 2) {
-            this.bundle = bundle;
+
+    public void setHomeFragmentBundle(Bundle bundle) {
+        if (bundle != null) {
+            this.homeFragmentBundle = bundle;
+            notifyDataSetChanged();
+        }
+    }
+    public void setMealFragment(Bundle bundle) {
+        if (bundle != null) {
+            this.mealFragmentBundle = bundle;
             notifyDataSetChanged();
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return 4;
+    public void setFoodRecommendFragmentBundle(Bundle bundle) {
+        if (bundle != null) {
+            this.foodRecommendFragmentBundle = bundle;
+            notifyDataSetChanged();
+        }
     }
 }

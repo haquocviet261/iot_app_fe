@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <ImageButton
+
                 android:id="@+id/back"
                 android:layout_margin="10dp"
                 android:onClick="@{() -> conversationViewModel.onclickBack()}"
@@ -40,10 +41,21 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/text_recommend"
+            android:textColor="@color/green_background"
+            android:textSize="25sp"
+            android:visibility="@{conversationViewModel.is_greeting}"
+            android:gravity="center"
+            android:layout_below="@+id/toolbar"
+            android:text="Hello, How can i help you today !"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_content"
         android:layout_above="@+id/chat_nav"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/text_recommend"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
         <androidx.cardview.widget.CardView

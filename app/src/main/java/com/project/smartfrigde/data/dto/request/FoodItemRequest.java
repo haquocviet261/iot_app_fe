@@ -5,7 +5,7 @@ import java.util.Date;
 public class FoodItemRequest {
     private String food_name;
     private Date add_date;
-    private int quantity;
+    private Integer quantity;
     private Date expiration_date;
     private Long device_item_id;
     private Long food_id;
@@ -13,7 +13,7 @@ public class FoodItemRequest {
     public FoodItemRequest() {
     }
 
-    public FoodItemRequest(String food_name, Date add_date, int quantity, Date expiration_date, Long device_item_id, Long food_id) {
+    public FoodItemRequest(String food_name, Date add_date, Integer quantity, Date expiration_date, Long device_item_id, Long food_id) {
         this.food_name = food_name;
         this.add_date = add_date;
         this.quantity = quantity;
@@ -38,11 +38,11 @@ public class FoodItemRequest {
         this.add_date = add_date;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

@@ -52,19 +52,11 @@ public class HomeViewmodel extends ViewModel {
     private ObservableField<Boolean> isLoaddedData = new ObservableField<>(false);
     private ObservableField<Boolean> isDetailDevice = new ObservableField<>(false);
     private ObservableArrayList<Food> foods = new ObservableArrayList<Food>();
-    public ObservableArrayList<DeviceRequest> list_device = new ObservableArrayList<>();
-    private ObservableField<Boolean> is_loadded_data = new ObservableField<>(Boolean.FALSE);
 
     private ObservableArrayList<FoodItemResponse> list_food_item = new ObservableArrayList<>();
     private ObservableField<Boolean> isLoaddedFoodItem = new ObservableField<>(false);
 
-    public ObservableField<Boolean> getIs_loadded_data() {
-        return is_loadded_data;
-    }
 
-    public void setIs_loadded_data(ObservableField<Boolean> is_loadded_data) {
-        this.is_loadded_data = is_loadded_data;
-    }
 
     public ObservableField<Boolean> getIsDetailDevice() {
         return isDetailDevice;
@@ -78,13 +70,7 @@ public class HomeViewmodel extends ViewModel {
         this.list_food_item = list_food_item;
     }
 
-    public ObservableArrayList<DeviceRequest> getList_device() {
-        return list_device;
-    }
 
-    public void setList_device(ObservableArrayList<DeviceRequest> list_device) {
-        this.list_device = list_device;
-    }
 
     public void setIsDetailDevice(ObservableField<Boolean> isDetailDevice) {
         this.isDetailDevice = isDetailDevice;
@@ -230,38 +216,7 @@ public class HomeViewmodel extends ViewModel {
                     }
                 });
     }
-    public void callAPI(SharedPreferences.Editor editor){
-        DeviceAPIService.DEVICE_API_SERVICE.getAllDevice().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        disposable.add(d);
-                    }
 
-                    @Override
-                    public void onNext(@NonNull ResponseObject responseObject) {
-                        List<DeviceRequest> list = gson.fromJson(new Gson().toJson(responseObject.getData()),
-                                new TypeToken<List<DeviceRequest>>(){}.getType()
-                        );
-                        list_device.addAll(list);
-                        String json = gson.toJson(list);
-                        editor.putString(Validation.KEY_DEVICE, json);
-                        editor.apply();
-
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        is_loadded_data.set(false);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        is_loadded_data.set(true);
-                    }
-                });
-    }
     public void isDetailDevice(){
         isDetailDevice.set(false);
         isDetailDevice.set(true);
