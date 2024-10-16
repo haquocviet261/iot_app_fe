@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 
-public class Food implements Parcelable {
+public class Food_old implements Parcelable {
     private Long food_id;
     private String food_name;
     private Integer date_expired;
@@ -12,10 +12,10 @@ public class Food implements Parcelable {
     private String unit;
     private Long food_category_id;
 
-    public Food() {
+    public Food_old() {
     }
 
-    public Food(Long food_id, String food_name, Integer date_expired, Integer calories_per_unit, String unit, Long food_category_id) {
+    public Food_old(Long food_id, String food_name, Integer date_expired, Integer calories_per_unit, String unit, Long food_category_id) {
         this.food_id = food_id;
         this.food_name = food_name;
         this.date_expired = date_expired;
@@ -23,7 +23,7 @@ public class Food implements Parcelable {
         this.unit = unit;
         this.food_category_id = food_category_id;
     }
-    protected Food(Parcel in) {
+    protected Food_old(Parcel in) {
         if (in.readByte() == 0) {
             food_id = null;
         } else {
@@ -48,15 +48,15 @@ public class Food implements Parcelable {
         }
     }
 
-    public static final Creator<Food> CREATOR = new Creator<Food>() {
+    public static final Creator<Food_old> CREATOR = new Creator<Food_old>() {
         @Override
-        public Food createFromParcel(Parcel in) {
-            return new Food(in);
+        public Food_old createFromParcel(Parcel in) {
+            return new Food_old(in);
         }
 
         @Override
-        public Food[] newArray(int size) {
-            return new Food[size];
+        public Food_old[] newArray(int size) {
+            return new Food_old[size];
         }
     };
 
