@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.UserManagementActivity">
+    tools:context=".view.FoodActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:gravity="center"
-            android:text="User Management"
+            android:text="Food"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -38,9 +38,7 @@
             android:id="@+id/btn_add_user"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="add_user"
-            android:src="@drawable/baseline_add_24" />
+            android:layout_weight="1" />
     </LinearLayout>
 
     <EditText
@@ -76,8 +74,78 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="50dp" >
+
+            <TextView
+                android:id="@+id/category_all"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/edittext_white"
+                android:text="All"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/category_meat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/edittext_white"
+                android:text="Thịt"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/category_vegetables"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/edittext_white"
+                android:text="Rau"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/category_fruits"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/edittext_white"
+                android:text="Quả"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/category_others"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/edittext_white"
+                android:text="Khác"
+                android:gravity="center"
+                android:padding="10dp"/>
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/user_recycler_view"
+            android:id="@+id/food_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp" />

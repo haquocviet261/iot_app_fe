@@ -4,39 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient"
     android:padding="16dp"
-    tools:context=".view.SignInActivity">
+    tools:context=".view.fragment.SignInFragment">
 
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.558"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/logoImageView"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:src="@drawable/logo"
-        app:layout_constraintStart_toStartOf="@+id/imageView6"
-        app:layout_constraintEnd_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toTopOf="@+id/imageView6"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
-
-<!--    <androidx.viewpager2.widget.ViewPager2-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintTop_toBottomOf="imageView6"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        android:layout_marginTop="20dp"/>-->
     <LinearLayout
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
@@ -47,10 +17,10 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.592">
+        app:layout_constraintVertical_bias="0.066">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -146,6 +116,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
+            style="@style/orange_btn"
             android:background="@drawable/orange_button"
             android:text="Sign in"
             android:textColor="@android:color/white"
@@ -160,7 +131,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Forgot Password?"
-        android:textColor="#FF5722"
+        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/linear_layout"
         app:layout_constraintTop_toBottomOf="@+id/linear_layout" />
@@ -174,7 +145,9 @@
         app:isDarkTheme="true"
         app:layout_constraintBottom_toTopOf="@+id/tv_sign_up"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_layout"
+        app:layout_constraintVertical_bias="0.72" />
 
     <TextView
         android:id="@+id/tv_sign_up"

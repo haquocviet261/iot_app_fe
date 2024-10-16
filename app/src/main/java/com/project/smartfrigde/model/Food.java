@@ -4,18 +4,45 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 
-public class Food_old implements Parcelable {
+public class Food implements Parcelable {
     private Long food_id;
     private String food_name;
     private Integer date_expired;
     private Integer calories_per_unit;
     private String unit;
     private Long food_category_id;
+    private String name;
+    private String expirationDate;
+    private String quantity;
+    private String category;
 
-    public Food_old() {
+    public Food(String name, String expirationDate, String quantity, String category) {
+        this.name = name;
+        this.expirationDate = expirationDate;
+        this.quantity = quantity;
+        this.category = category;
     }
 
-    public Food_old(Long food_id, String food_name, Integer date_expired, Integer calories_per_unit, String unit, Long food_category_id) {
+    public String getName() {
+        return name;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public Food() {
+    }
+
+    public Food(Long food_id, String food_name, Integer date_expired, Integer calories_per_unit, String unit, Long food_category_id) {
         this.food_id = food_id;
         this.food_name = food_name;
         this.date_expired = date_expired;
@@ -23,7 +50,7 @@ public class Food_old implements Parcelable {
         this.unit = unit;
         this.food_category_id = food_category_id;
     }
-    protected Food_old(Parcel in) {
+    protected Food(Parcel in) {
         if (in.readByte() == 0) {
             food_id = null;
         } else {
@@ -48,15 +75,15 @@ public class Food_old implements Parcelable {
         }
     }
 
-    public static final Creator<Food_old> CREATOR = new Creator<Food_old>() {
+    public static final Creator<Food> CREATOR = new Creator<Food>() {
         @Override
-        public Food_old createFromParcel(Parcel in) {
-            return new Food_old(in);
+        public Food createFromParcel(Parcel in) {
+            return new Food(in);
         }
 
         @Override
-        public Food_old[] newArray(int size) {
-            return new Food_old[size];
+        public Food[] newArray(int size) {
+            return new Food[size];
         }
     };
 

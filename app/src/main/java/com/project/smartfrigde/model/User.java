@@ -25,6 +25,12 @@ public class User {
         this.user_name = user_name;
     }
 
+    public User(String user_name, String email, String phone_number) {
+        this.user_name = user_name;
+        this.email = email;
+        this.phone_number = phone_number;
+    }
+
     public User(Long user_id, String user_name, String first_name, String last_name, String phone_number, Date date_of_birth, String email, String address, Role role, Long status, String image_src) {
         this.user_id = user_id;
         this.user_name = user_name;
@@ -54,7 +60,6 @@ public class User {
     public void setUser_name(String user_name) {
         this.user_name = user_name;
     }
-
 
 
     public String getFirst_name() {

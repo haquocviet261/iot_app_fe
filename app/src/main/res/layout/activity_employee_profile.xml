@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.UserProfileActivity">
+    tools:context=".view.EmployeeProfileActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:gravity="center"
-            android:text="User Profile"
+            android:text="Employee Profile"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -158,6 +158,40 @@
                     android:ems="10"
                     android:hint="Phone"
                     android:inputType="phone"
+                    android:textColor="#FF5722"
+                    android:textColorHint="#FF5722"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/edittext_white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/baseline_date_range_24" />
+
+                <TextView
+                    android:id="@+id/tv_dOB"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="20dp"
+                    android:gravity="start|center"
+                    android:layout_weight="1"
+                    android:background="@drawable/no_underline"
+                    android:ems="10"
+                    android:hint="Date of birth"
+                    android:inputType="date"
                     android:textColor="#FF5722"
                     android:textColorHint="#FF5722"
                     android:textSize="18sp" />

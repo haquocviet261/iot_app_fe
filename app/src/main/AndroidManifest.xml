@@ -40,7 +40,40 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".view.Main2Activity"
+            android:name=".view.SignInActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.NotificationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.FoodActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.UserManagementActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.EditProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.UserProfileActivity"
             android:exported="true" />
         <activity
             android:name=".view.FoodDetailActivity"
@@ -51,13 +84,9 @@
         <activity
             android:name=".view.DetailDeviceActivity"
             android:exported="false" />
-
         <activity
             android:name=".view.AddDeviceActivity"
             android:exported="true" />
-        <activity
-            android:name=".view.NotificationActivity"
-            android:exported="false" />
         <activity
             android:name=".view.DashboardActivity"
             android:exported="true" />
@@ -80,7 +109,6 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
-
     </application>
 
 </manifest>

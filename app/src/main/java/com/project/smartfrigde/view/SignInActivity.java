@@ -1,26 +1,35 @@
 package com.project.smartfrigde.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.project.smartfrigde.R;
+import com.project.smartfrigde.adapter.SignInPagerAdapter;
+import com.shobhitpuri.custombuttons.GoogleSignInButton;
 
 public class SignInActivity extends AppCompatActivity {
+
+    private ViewPager2 viewPager2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sign_in);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        viewPager2 = findViewById(R.id.view_pager_2);
+
+        SignInPagerAdapter signInPagerAdapter = new SignInPagerAdapter(this);
+        viewPager2.setAdapter(signInPagerAdapter);
     }
 }

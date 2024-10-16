@@ -1,11 +1,12 @@
 package com.project.smartfrigde.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.project.smartfrigde.R;
 import com.project.smartfrigde.adapter.UserAdapter;
 import com.project.smartfrigde.model.User;
@@ -14,7 +15,7 @@ import com.project.smartfrigde.view.fragment.AddUserDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserManagementActivity extends AppCompatActivity implements AddUserDialogFragment.AddUserDialogListener {
+public class EmployeeManagementActivity extends AppCompatActivity implements AddUserDialogFragment.AddUserDialogListener {
 
     private RecyclerView userRecyclerView;
     private UserAdapter userAdapter;
@@ -23,10 +24,10 @@ public class UserManagementActivity extends AppCompatActivity implements AddUser
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_management);
+        setContentView(R.layout.activity_employee_management);
 
         // Initialize UI components
-        userRecyclerView = findViewById(R.id.user_recycler_view);
+        userRecyclerView = findViewById(R.id.employee_recycler_view);
         View btnBack = findViewById(R.id.btn_back);
         View btnAddUser = findViewById(R.id.btn_add_user);
 
@@ -42,7 +43,7 @@ public class UserManagementActivity extends AppCompatActivity implements AddUser
         // Set click listener for add user button
         btnAddUser.setOnClickListener(v -> {
             // Show AddUserDialogFragment
-            AddUserDialogFragment dialog = new AddUserDialogFragment(UserManagementActivity.this);
+            AddUserDialogFragment dialog = new AddUserDialogFragment(EmployeeManagementActivity.this);
             dialog.show(getSupportFragmentManager(), "AddUserDialogFragment");
         });
 
