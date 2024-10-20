@@ -6,14 +6,11 @@
 
             name="device"
             type="com.project.smartfrigde.model.BluetoothDevice" />
-        <variable
-            name="homeViewModel"
-            type="com.project.smartfrigde.viewmodel.HomeViewmodel" />
+
     </data>
         <androidx.cardview.widget.CardView
             android:id="@+id/group_device"
             app:cardCornerRadius="15dp"
-            android:onClick="@{() -> homeViewModel.isDetailDevice()}"
             android:layout_width="140dp"
             android:layout_marginLeft="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -35,7 +32,6 @@
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/animationView"
                         android:layout_width="30dp"
-                        android:onClick="@{() -> homeViewModel.isDetailDevice()}"
                         android:layout_height="60dp"
                         app:lottie_autoPlay="true"
                         android:layout_weight="1"
@@ -54,7 +50,6 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <TextView
-                    android:onClick="@{() -> homeViewModel.isDetailDevice()}"
                     android:id="@+id/device_name"
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"

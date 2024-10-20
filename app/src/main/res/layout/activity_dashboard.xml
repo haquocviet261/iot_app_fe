@@ -1,31 +1,364 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="homeViewModel"
-            type="com.project.smartfrigde.viewmodel.HomeViewmodel" />
+            name="dashBoardViewModel"
+            type="com.project.smartfrigde.viewmodel.DashBoardViewModel" />
     </data>
     <RelativeLayout
+        android:background="@drawable/background_dashboard"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+       <androidx.cardview.widget.CardView
+           android:background="?android:attr/selectableItemBackground"
+           app:cardBackgroundColor="@android:color/transparent"
+           android:id="@+id/nav_top"
+           android:layout_marginTop="15dp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           app:cardElevation="0dp"
+           app:contentPadding="0dp">
+           <LinearLayout
+               android:orientation="horizontal"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <de.hdodenhof.circleimageview.CircleImageView
+                   android:id="@+id/avatar_user"
+                   android:onClick="@{() -> dashBoardViewModel.goDetailUser()}"
+                   android:src="@drawable/account"
+                   android:layout_marginStart="10dp"
+                   android:layout_width="60dp"
+                   android:scaleType="centerCrop"
+                   android:layout_height="60dp"/>
+               <TextView
+                   android:id="@+id/user_name"
+                   android:textStyle="bold"
+                   android:text="User name here"
+                   android:textSize="22sp"
+                   android:layout_marginLeft="8dp"
+                   android:gravity="center_vertical"
+                   android:layout_weight="1"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"/>
+               <ImageButton
+                   android:layout_gravity="bottom"
+                   android:padding="5dp"
+                   android:onClick="@{() -> dashBoardViewModel.goToSetting()}"
+                   android:layout_marginRight="10dp"
+                   android:layout_width="wrap_content"
+                   android:background="?android:attr/selectableItemBackground"
+                   android:src="@drawable/baseline_settings_24"
+                   android:layout_height="match_parent"/>
+           </LinearLayout>
+       </androidx.cardview.widget.CardView>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/page"
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_above="@+id/bottom_navigation"
-        android:layout_height="wrap_content"/>
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="match_parent"
-        android:id="@+id/bottom_navigation"
-        app:itemIconSize="35dp"
-        android:layout_alignParentBottom="true"
-        app:itemIconTint="@color/green_background"
-        app:itemTextColor="@color/green_background"
-        app:menu="@menu/bottom_navigation"
-        android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_below="@id/nav_top"
+            android:id="@+id/title"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textStyle="bold"
+                android:textSize="35sp"
+                android:layout_width="wrap_content"
+                android:text="DashBoard"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </LinearLayout>
+        <RelativeLayout
+            android:background="@drawable/background_himidnity"
+            android:layout_marginTop="30dp"
+            android:layout_below="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <GridLayout
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/group_huminity"
+            android:layout_width="match_parent"
+            android:rowCount="4"
+            android:columnCount="2"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                android:layout_margin="8dp"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="12dp"
+                android:layout_row="1"
+                android:layout_columnWeight="1"
+                android:layout_column="1">
+                <LinearLayout
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:text="Humidity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:gravity="center"
+                            android:textSize="25sp"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:text="@{String.valueOf(dashBoardViewModel.humidityObservable)}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"/>
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/animationView"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            app:lottie_autoPlay="true"
+                            android:layout_marginLeft="6dp"
+                            app:lottie_loop="true"
+                            android:layout_gravity="center_horizontal"
+                            app:lottie_fileName="humidnity.json" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_margin="8dp"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="12dp"
+                android:layout_row="1"
+                android:layout_columnWeight="1"
+                android:layout_column="0">
+                <LinearLayout
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:text="Temperature"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:gravity="center"
+                            android:textSize="25sp"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:text="@{String.valueOf(dashBoardViewModel.tempuratureObservable) + dashBoardViewModel.TEMPURATURE_TAMPLATE}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"/>
+                        <ImageView
+                            android:id="@+id/temperature"
+                            android:layout_width="50dp"
+                            android:layout_marginLeft="6dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/thermometer_temperature"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </GridLayout>
+            <RelativeLayout
+                android:background="@drawable/background_manage_food"
+                android:layout_below="@+id/group_huminity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <GridLayout
+                android:layout_width="match_parent"
+                android:rowCount="3"
+                android:columnCount="2"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="25dp"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_margin="5dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="12dp"
+                    android:layout_row="1"
+                    android:layout_columnWeight="1"
+                    android:layout_column="0">
+                    <LinearLayout
+                        android:gravity="center"
+                        android:onClick="@{() -> dashBoardViewModel.goToFood()}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            app:lottie_autoPlay="true"
+                            android:onClick="@{() -> dashBoardViewModel.goToFood()}"
+                            app:lottie_loop="true"
+                            android:layout_gravity="center_horizontal"
+                            app:lottie_fileName="food.json" />
+                        <TextView
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:text="View Foods"
+                            android:textSize="20sp"
+                            android:onClick="@{() -> dashBoardViewModel.goToFood()}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal">
+                        </TextView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_margin="5dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="12dp"
+                    android:layout_row="1"
+                    android:layout_columnWeight="1"
+                    android:layout_column="1">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/notification_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:gravity="center"
+                            android:onClick="@{() -> dashBoardViewModel.goToNotification()}"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <ImageButton
+                                android:onClick="@{() -> dashBoardViewModel.goToNotification()}"
+                                android:layout_width="80dp"
+                                android:src="@drawable/notifications"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:layout_height="80dp"/>
+                            <TextView
+                                android:onClick="@{() -> dashBoardViewModel.goToNotification()}"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:text="Notifications"
+                                android:textSize="20sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal">
+                            </TextView>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/notification_number"
+                            app:layout_constraintEnd_toEndOf="@id/notification_group"
+                            app:layout_constraintTop_toTopOf="@+id/notification_group"
+                            app:cardCornerRadius="50dp"
+                            app:cardBackgroundColor="@color/red"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp">
+                            <LinearLayout
+                                android:onClick="@{() -> dashBoardViewModel.goToNotification()}"
+                                android:layout_width="match_parent"
+                                android:gravity="center"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:textColor="@color/white"
+                                    android:layout_width="wrap_content"
+                                    android:textSize="20sp"
+                                    android:text="+99"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_margin="5dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="12dp"
+                    android:layout_row="2"
+                    android:layout_columnWeight="1"
+                    android:layout_column="0">
+                    <LinearLayout
+                        android:gravity="center"
+                        android:onClick="@{() -> dashBoardViewModel.goToUser()}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <ImageButton
+                            android:onClick="@{() -> dashBoardViewModel.goToUser()}"
+                            android:layout_width="80dp"
+                            android:src="@drawable/account"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:layout_height="80dp"/>
+                        <TextView
+                            android:onClick="@{() -> dashBoardViewModel.goToUser()}"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:text="Manage Users"
+                            android:textSize="20sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal">
+                        </TextView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_margin="5dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="12dp"
+                    android:layout_row="2"
+                    android:layout_columnWeight="1"
+                    android:layout_column="1">
+                    <LinearLayout
+                        android:gravity="center"
+                        android:onClick="@{() -> dashBoardViewModel.goToStatistic()}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            app:lottie_autoPlay="true"
+                            android:onClick="@{() -> dashBoardViewModel.goToStatistic()}"
+                            app:lottie_loop="true"
+                            android:layout_gravity="center_horizontal"
+                            app:lottie_fileName="statistics.json" />
+                        <TextView
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:text="View Statistics"
+                            android:textSize="20sp"
+                            android:layout_width="wrap_content"
+                            android:onClick="@{() -> dashBoardViewModel.goToStatistic()}"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal">
+                        </TextView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+        </GridLayout>
+            </RelativeLayout>
+        </RelativeLayout>
     </RelativeLayout>
-
 </layout>

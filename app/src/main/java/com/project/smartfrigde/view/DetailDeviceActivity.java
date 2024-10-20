@@ -86,7 +86,7 @@ public class DetailDeviceActivity extends AppCompatActivity {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 //recyclerView.setAdapter(detailDeviceViewModel.getListFoodItem());
-                foodItemAdapter.setFood(detailDeviceViewModel.getListFoodItem());
+               // foodItemAdapter.setFood(detailDeviceViewModel.getListFoodItem());
                 
             }
         });

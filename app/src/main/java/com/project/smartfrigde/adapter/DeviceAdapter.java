@@ -25,11 +25,9 @@ import com.project.smartfrigde.bluetooth.BluetoothService;
 import com.project.smartfrigde.bluetooth.ConnectedThread;
 import com.project.smartfrigde.databinding.ItemDeviceBinding;
 import com.project.smartfrigde.model.BluetoothDevice;
-import com.project.smartfrigde.model.Device;
 import com.project.smartfrigde.model.Wifi;
 import com.project.smartfrigde.utils.ProgressDialog;
 import com.project.smartfrigde.view.DetailDeviceActivity;
-import com.project.smartfrigde.viewmodel.HomeViewmodel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +36,15 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     private List<BluetoothDevice> list = new ArrayList<>();
     private Context context;
     private BluetoothService bluetoothService;
-    private HomeViewmodel homeViewmodel;
-    private ProgressDialog progressDialog;
-    public DeviceAdapter(List<BluetoothDevice> list,Context context,BluetoothService bluetoothService,HomeViewmodel homeViewmodel) {
-        this.list = list;
-        this.context = context;
-        this.bluetoothService = bluetoothService;
-        this.homeViewmodel = homeViewmodel;
-        progressDialog = new ProgressDialog(context,R.layout.progressdialog);
-
-    }
+   // private ProgressDialog progressDialog;
+//    public DeviceAdapter(List<BluetoothDevice> list,Context context,BluetoothService bluetoothService,HomeViewmodel homeViewmodel) {
+//        this.list = list;
+//        this.context = context;
+//        this.bluetoothService = bluetoothService;
+//        this.homeViewmodel = homeViewmodel;
+//        progressDialog = new ProgressDialog(context,R.layout.progressdialog);
+//
+//    }
 
     public BluetoothService getBluetoothService() {
         return bluetoothService;
@@ -65,7 +62,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     @Override
     public DeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemDeviceBinding itemDeviceBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_device,parent,false);
-        itemDeviceBinding.setHomeViewModel(homeViewmodel);
+     //   itemDeviceBinding.setHomeViewModel(homeViewmodel);
         return new DeviceViewHolder(itemDeviceBinding);
     }
 
@@ -74,19 +71,19 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         BluetoothDevice device = list.get(position);
         holder.itemDeviceBinding.setDevice(device);
 
-        holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                progressDialog.show();
-                if (Boolean.TRUE.equals(holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().get())) {
-                    Intent intent = new Intent(context, DetailDeviceActivity.class);
-                    progressDialog.dismiss();
-                    context.startActivity(intent);
-                }
-            }
-        });
+//        holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+//            @Override
+//            public void onPropertyChanged(Observable sender, int propertyId) {
+//                progressDialog.show();
+//                if (Boolean.TRUE.equals(holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().get())) {
+//                    Intent intent = new Intent(context, DetailDeviceActivity.class);
+//                    progressDialog.dismiss();
+//                    context.startActivity(intent);
+//                }
+//            }
+//        });
 
-        holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().set(false);
+       // holder.itemDeviceBinding.getHomeViewModel().getIsDetailDevice().set(false);
         holder.itemDeviceBinding.detailDevice.setOnClickListener(view -> {
             openWifiSettingDialog(Gravity.CENTER);
         });
@@ -146,7 +143,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
             this.itemDeviceBinding = itemView;
         }
     }
-    private void checkAndNavigate(HomeViewmodel viewModel, Context context) {
-
-    }
+//    private void checkAndNavigate(HomeViewmodel viewModel, Context context) {
+//
+//    }
 }

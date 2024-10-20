@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.util.Log;
@@ -13,12 +12,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.credentials.CredentialManager;
 import androidx.credentials.CredentialManagerCallback;
 import androidx.credentials.GetCredentialRequest;
@@ -28,19 +22,14 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
-import com.google.common.reflect.TypeToken;
 import com.project.smartfrigde.R;
 import com.project.smartfrigde.databinding.ActivityLoginBinding;
-import com.project.smartfrigde.model.Food;
 import com.project.smartfrigde.utils.ProgressDialog;
 import com.project.smartfrigde.utils.SecurePreferencesManager;
 import com.project.smartfrigde.utils.UserSecurePreferencesManager;
 import com.project.smartfrigde.utils.Validation;
-import com.project.smartfrigde.viewmodel.HomeViewmodel;
 import com.project.smartfrigde.viewmodel.LoginViewModel;
 
-import java.lang.reflect.Type;
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 

@@ -25,13 +25,11 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-
-
 public class AddDeviceViewModel extends ViewModel {
     private static final Gson gson = new Gson();
-    Human bao = new Human();
     private CompositeDisposable disposable = new CompositeDisposable();
     private ObservableField<Integer> is_scan = new ObservableField<>(View.VISIBLE);
+    private ObservableField<Integer> isVisibilityWifi = new ObservableField<>(View.VISIBLE);
     private ObservableField<Boolean> is_back = new ObservableField<>(Boolean.FALSE);
     private ObservableField<Boolean> is_add_device_item = new ObservableField<>(Boolean.FALSE);
     private ObservableField<Boolean> is_loadded_data = new ObservableField<>(Boolean.FALSE);
@@ -62,6 +60,14 @@ public class AddDeviceViewModel extends ViewModel {
 
     public void setList_device(ObservableArrayList<DeviceRequest> list_device) {
         this.list_device = list_device;
+    }
+
+    public ObservableField<Integer> getIsVisibilityWifi() {
+        return isVisibilityWifi;
+    }
+
+    public void setIsVisibilityWifi(ObservableField<Integer> isVisibilityWifi) {
+        this.isVisibilityWifi = isVisibilityWifi;
     }
 
     private Long device_id;

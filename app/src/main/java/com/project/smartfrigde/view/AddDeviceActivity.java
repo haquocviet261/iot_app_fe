@@ -1,7 +1,6 @@
 package com.project.smartfrigde.view;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,22 +12,15 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
-import androidx.databinding.ObservableList;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,20 +29,16 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.project.smartfrigde.R;
 import com.project.smartfrigde.adapter.DeviceScanAdapter;
-import com.project.smartfrigde.bluetooth.BluetoothService;
 import com.project.smartfrigde.data.dto.request.DeviceRequest;
 import com.project.smartfrigde.databinding.ActivityAddDeviceBinding;
 import com.project.smartfrigde.model.User;
-import com.project.smartfrigde.utils.ProgressDialog;
 import com.project.smartfrigde.utils.UserSecurePreferencesManager;
 import com.project.smartfrigde.utils.Validation;
 import com.project.smartfrigde.viewmodel.AddDeviceViewModel;
-import com.project.smartfrigde.viewmodel.HomeViewmodel;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class AddDeviceActivity extends AppCompatActivity {
 
@@ -64,13 +52,12 @@ public class AddDeviceActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> enableBluetoothLauncher;
     User user = UserSecurePreferencesManager.getUser();
     private SharedPreferences sharedPreferences;
-    private  HomeViewmodel homeViewmodel;
     private List<DeviceRequest> deviceRequestList;
     List<com.project.smartfrigde.model.BluetoothDevice> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        homeViewmodel = new HomeViewmodel();
+
         addDeviceViewModel = new AddDeviceViewModel(user.getUser_id());
         sharedPreferences = getSharedPreferences(Validation.PREF_NAME, Context.MODE_PRIVATE);
         String jsonDevices = sharedPreferences.getString(Validation.KEY_DEVICE, null);
@@ -83,16 +70,6 @@ public class AddDeviceActivity extends AppCompatActivity {
             addDeviceViewModel.callAPI(editor);
             addDeviceViewModel.getIs_scan().set(View.GONE);
         }
-        addDeviceViewModel.getIs_loadded_data().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (Boolean.TRUE.equals(homeViewmodel.getIsLoaddedData().get())){
-                    addDeviceViewModel.setDevice_id(addDeviceViewModel.getList_device().get(0).getDevice_id());
-                    addDeviceViewModel.getIs_scan().set(View.VISIBLE);
-                }
-            }
-        });
-
         activityAddDeviceBinding = DataBindingUtil.setContentView(this,R.layout.activity_add_device);
         activityAddDeviceBinding.setAddDeviceViewModel(addDeviceViewModel);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -175,7 +152,6 @@ public class AddDeviceActivity extends AppCompatActivity {
     private void showToast(String msg) {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
