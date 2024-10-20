@@ -11,6 +11,33 @@ public class Food implements Parcelable {
     private Integer calories_per_unit;
     private String unit;
     private Long food_category_id;
+    private String name;
+    private String expirationDate;
+    private String quantity;
+    private String category;
+
+    public Food(String name, String expirationDate, String quantity, String category) {
+        this.name = name;
+        this.expirationDate = expirationDate;
+        this.quantity = quantity;
+        this.category = category;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public String getCategory() {
+        return category;
+    }
 
     public Food() {
     }
